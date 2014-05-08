@@ -7,11 +7,8 @@
 int main(int argc, const char * argv[]) {
     srand((int) time(NULL));
     
-    GeneticAlgo g;
-    g.run();
-    
-    //CentralPatternGenerator cpg;
-    //cpg.run();
+    CentralPatternGenerator cpg;
+    cpg.run();
     return EXIT_SUCCESS;
 }
 
