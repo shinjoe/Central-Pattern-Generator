@@ -5,8 +5,6 @@
 #include "Neuron.h"
 #include "RungeKutta.h"
 
-#define NETWORK_SIZE 10
-
 class CentralPatternGenerator {
 public:
     CentralPatternGenerator();

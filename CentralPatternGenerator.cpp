@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define TIMESTEP .01
+#define TIMESTEP .1
 #define TRIAL_LEN 1 // seconds
 #define TRIAL_TICKS TRIAL_LEN/TIMESTEP
 
@@ -50,13 +50,20 @@ CentralPatternGenerator::CentralPatternGenerator() {
 
 
 void CentralPatternGenerator::run() {
-    for (int curTick = 0; curTick < 1; curTick++) {
-        cout << "Running tick "  << curTick << endl;
-        cout << "------------------------------------------" << endl;
+    double time = 0.0;
+    for (int curTick = 0; curTick < 100; curTick++) {
+        
+        //cout << "Running tick "  << curTick << endl;
+        //cout << "------------------------------------------" << endl;
         for (auto& n : m_network) {
-            m_solver.calcMeanMembranePotential();
-            m_solver.calcFiringFrequency();
-            cout << n.getName() << " " << n.getM() << " " << n.getX() << endl;
+            m_solver.calcMeanMembranePotential(n, time, TIMESTEP);
         }
+        for (auto& n : m_network) {
+            m_solver.calcFiringFrequency(n);
+            //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
+            if (n.getName() == "M_right ")
+                cout << time << "\t"  << n.getX() << endl;
+        }
+        time += TIMESTEP;
     }
 }
