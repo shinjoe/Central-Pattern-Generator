@@ -12,11 +12,11 @@ CentralPatternGenerator::CentralPatternGenerator() {
     vector<double> b_left_init  { 57, -6.4, -8.2, 0, -5.8, -9.7,    0, -3.4, -8.8,    0};
     vector<double> c_left_init  { 20,  5.6,  -10, 0,    0,   -4, -4.1, -2.8, -9.6, -9.9};
     vector<double> bs_left_init {  0,    0,    5, 0,  8.2,  2.9,     0,   0,    0,    0};
-    M_left  = Neuron(m_left_init);
-    A_left  = Neuron(a_left_init);
-    B_left  = Neuron(b_left_init);
-    C_left  = Neuron(c_left_init);
-    BS_left = Neuron(bs_left_init);
+    M_left  = Neuron(m_left_init,  1, 1, MOTO);
+    A_left  = Neuron(a_left_init,  1, 1, INTER);
+    B_left  = Neuron(b_left_init,  1, 1, INTER);
+    C_left  = Neuron(c_left_init,  1, 1, INTER);
+    BS_left = Neuron(bs_left_init, 1, 1, BRAINSTEM);
     
     // right side is symmetric
     vector<double> m_right_init  { 20,   .2,    0,    0,    0,    0,    0, 0,    0,    0};
@@ -25,11 +25,11 @@ CentralPatternGenerator::CentralPatternGenerator() {
     vector<double> c_right_init  { 20,  5.6, -4.1, -2.8, -9.6, -9.9,  -10, 0,    0,   -4};
     vector<double> bs_right_init {  0,    0,    0,    0,    0,    0,    5, 0,  8.2,  2.9};
     
-    M_right  = Neuron(m_right_init);
-    A_right  = Neuron(a_right_init);
-    B_right  = Neuron(b_right_init);
-    C_right  = Neuron(c_right_init);
-    BS_right = Neuron(bs_right_init);
+    M_right  = Neuron(m_right_init,  1, 1, MOTO);
+    A_right  = Neuron(a_right_init,  1, 1, INTER);
+    B_right  = Neuron(b_right_init,  1, 1, INTER);
+    C_right  = Neuron(c_right_init,  1, 1, INTER);
+    BS_right = Neuron(bs_right_init, 1, 1, BRAINSTEM);
 }
 
 

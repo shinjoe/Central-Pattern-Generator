@@ -13,13 +13,14 @@ enum NEURON_TYPE {
 class Neuron {
 public:
     Neuron();
-    Neuron(std::vector<double>&, double m=1.0, double x=1.0);
+    Neuron(std::vector<double>&, double m=1.0, double x=1.0, NEURON_TYPE n=INTER);
 private:
     Chromosome m_chromosome;
     std::vector<Neuron *> m_neighbors;
     std::vector<double> m_weights;
     double m_m;
     double m_x;
+    NEURON_TYPE m_ntype;
 
 };
 
