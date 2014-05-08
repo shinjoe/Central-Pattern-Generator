@@ -10,6 +10,7 @@ class Neuron {
 public:
 private:
     Chromosome m_chromosome;
+    std::vector<Neuron *> m_neighbors;
 };
 
 #endif /* defined(__central_pattern_generator__Neuron__) */
