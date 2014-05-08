@@ -1,8 +1,11 @@
 #ifndef __central_pattern_generator__CentralPatternGenerator__
 #define __central_pattern_generator__CentralPatternGenerator__
 
-#include <iostream>
+#include <vector>
 #include "Neuron.h"
+#include "RungeKutta.h"
+
+#define NETWORK_SIZE 10
 
 class CentralPatternGenerator {
 public:
@@ -21,6 +24,12 @@ private:
     Neuron C_right;
     Neuron M_right;
     Neuron BS_right;
+    
+    std::vector<Neuron> m_network;
+    
+    RungeKutta m_solver;
+    
+    
 };
 
 
