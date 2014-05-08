@@ -5,7 +5,7 @@
 
 class CentralPatternGenerator {
 public:
-    void run(int ticks);
+    void run();
 private:
 };
 
