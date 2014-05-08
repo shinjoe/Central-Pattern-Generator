@@ -4,11 +4,11 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include <vector>
 
 
 #define CHROMOSOME_LEN 40
 #define PERFECT_FITNESS 9999.0
-#include <string>
 
 class GeneticAlgo;
 class Chromosome {

@@ -162,3 +162,5 @@ void Chromosome::decode() {
     
     cout << res << endl;
 }
+
+
