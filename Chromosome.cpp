@@ -11,12 +11,12 @@
 using namespace std;
 
 Chromosome::Chromosome() {
-    m_bits = "";
+    m_genes = "";
     m_fitness = 0.0;
 }
 
-Chromosome::Chromosome(std::string& bits, double fitness) {
-    m_bits = bits;
+Chromosome::Chromosome(std::string& genes, double fitness) {
+    m_genes = genes;
     m_fitness = fitness;
 }
 
@@ -27,12 +27,12 @@ void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
 void Chromosome::getRandomBits() {
     for (int i = 0; i < CHROMOSOME_LEN - 1; i++) {
         int x = rand() % 2;
-        m_bits += to_string(x);
+        m_genes += to_string(x);
     }
 }
 
 void Chromosome::printBits() {
-    cout << m_bits << endl;
+    cout << m_genes << endl;
 }
 
 bool isNumber(string curElem) {
@@ -54,7 +54,7 @@ void Chromosome::calcFitness() {
     int accum = 0;
     string prevOp = "+";
     while (index < CHROMOSOME_LEN) {
-        string curString = m_bits.substr(index, GENE_LEN);
+        string curString = m_genes.substr(index, GENE_LEN);
         string curElem = m_ga->mapping[curString];
         if (curElem == "") {
             index += GENE_LEN;
@@ -135,7 +135,7 @@ string Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int l
     for (int i = 0; i < len; i++) {
         fitnessAccum += c_arr[i].getFitness();
         if (fitnessAccum >= pointSelected)
-            return c_arr[i].m_bits;
+            return c_arr[i].m_genes;
     }
     cerr << "Error with roulette select, should not reach this." << endl;
     return "";
@@ -145,7 +145,7 @@ string Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int l
 void Chromosome::decode() {
     string res = "";
     for (int i = 0; i < CHROMOSOME_LEN; i += GENE_LEN) {
-        res += m_ga->mapping[m_bits.substr(i, GENE_LEN)] + " ";
+        res += m_ga->mapping[m_genes.substr(i, GENE_LEN)] + " ";
     }
     
     cout << res << endl;

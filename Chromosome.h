@@ -12,7 +12,7 @@
 class GeneticAlgo;
 class Chromosome {
 private:
-    std::string m_bits;
+    std::string m_genes;
     double m_fitness;
     GeneticAlgo* m_ga;
     
