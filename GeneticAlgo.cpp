@@ -22,6 +22,8 @@ void GeneticAlgo::run() {
         c.printBits();
     }
     
+    cout << "----------------------------------------" << endl;
+    
     while (!done) {
         double totalFitness = 0.0;
         for (auto& c : c_arr) {
@@ -46,8 +48,8 @@ void GeneticAlgo::run() {
         // keep going until we made POP_SIZE more children
         while (newGenCount < POP_SIZE) {
             // choose two parents to crossover
-            string child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
-            string child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
+            array<float, CHROMOSOME_LEN> child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
+            array<float, CHROMOSOME_LEN> child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
             
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <array>
 
 
 #define CHROMOSOME_LEN 40
@@ -12,21 +13,21 @@
 class GeneticAlgo;
 class Chromosome {
 private:
-    std::string m_genes;
+    std::array<float, CHROMOSOME_LEN> m_genes;
     double m_fitness;
     GeneticAlgo* m_ga;
     
 public:
     Chromosome();
-    Chromosome(std::string& bits, double fitness=0.0);
+    Chromosome(std::array<float, CHROMOSOME_LEN>&, double fitness=0.0);
     void getRandomBits();
     void printBits();
     void printDecoded();
     void setGeneticAlgo(GeneticAlgo* ga);
     void calcFitness();
-    static void mutate(std::string& child);
-    static void crossover(std::string& child1, std::string& child2);
-    static std::string rouletteSelect(double totalFitness, Chromosome c_arr[], int len);
+    static void mutate(std::array<float, CHROMOSOME_LEN>& child);
+    static void crossover(std::array<float, CHROMOSOME_LEN>& child1, std::array<float, CHROMOSOME_LEN>& child2);
+    static std::array<float, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], int len);
     double getFitness();
     void decode();
     

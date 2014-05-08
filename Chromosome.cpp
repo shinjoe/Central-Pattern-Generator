@@ -11,11 +11,11 @@
 using namespace std;
 
 Chromosome::Chromosome() {
-    m_genes = "";
+    m_genes = array<float, CHROMOSOME_LEN>();
     m_fitness = 0.0;
 }
 
-Chromosome::Chromosome(std::string& genes, double fitness) {
+Chromosome::Chromosome(array<float, CHROMOSOME_LEN>& genes, double fitness) {
     m_genes = genes;
     m_fitness = fitness;
 }
@@ -25,14 +25,17 @@ void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
 }
 
 void Chromosome::getRandomBits() {
-    for (int i = 0; i < CHROMOSOME_LEN - 1; i++) {
+    for (int i = 0; i < CHROMOSOME_LEN; i++) {
         int x = rand() % 2;
-        m_genes += to_string(x);
+        m_genes[i] = x;
     }
 }
 
 void Chromosome::printBits() {
-    cout << m_genes << endl;
+    for (auto& g : m_genes) {
+        cout << g;
+    }
+    cout << endl;
 }
 
 bool isNumber(string curElem) {
@@ -54,7 +57,9 @@ void Chromosome::calcFitness() {
     int accum = 0;
     string prevOp = "+";
     while (index < CHROMOSOME_LEN) {
-        string curString = m_genes.substr(index, GENE_LEN);
+        string curString = "";
+        // TODO: CHANGE TO NOT (INT)
+        for (int i = index; i < index + GENE_LEN; i++) curString += to_string((int)m_genes[i]);
         string curElem = m_ga->mapping[curString];
         if (curElem == "") {
             index += GENE_LEN;
@@ -98,21 +103,25 @@ void Chromosome::calcFitness() {
     
 }
 
-char inverted(char c) {
-    return c == '0' ? '1' : '0';
+char inverted(int x) {
+    return x == 0 ? 1 : 0;
 }
 
-void Chromosome::crossover(string& child1, string& child2) {
+void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CHROMOSOME_LEN>& child2) {
     int crossChance = rand() % 100;
     if (crossChance < CROSSOVER_RATE) {
         int x = rand() % CHROMOSOME_LEN;
-        child1 = child1.substr(0, x) + child2.substr(x);
-        child2 = child2.substr(0, x) + child1.substr(x);
+        float temp = 0.0f;
+        for (int i = x; i < CHROMOSOME_LEN; i++) {
+            temp = child1[i];
+            child1[i] = child2[i];
+            child2[i] = temp;
+        }
     }
 }
 
 
-void Chromosome::mutate(string& child) {
+void Chromosome::mutate(array<float, CHROMOSOME_LEN>& child) {
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
         int x = rand() % 100 + 1;
         if (x <= MUTATION_RATE) {
@@ -128,7 +137,7 @@ double Chromosome::getFitness() {
 }
 
 
-string Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
+array<float, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
     // gets  number in range [0, totalFitness)
     double pointSelected = (rand() % ((int) (totalFitness * 100))) / 100.0;
     double fitnessAccum = 0.0;
@@ -138,14 +147,17 @@ string Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int l
             return c_arr[i].m_genes;
     }
     cerr << "Error with roulette select, should not reach this." << endl;
-    return "";
+    exit(EXIT_FAILURE);
 }
 
 
 void Chromosome::decode() {
     string res = "";
     for (int i = 0; i < CHROMOSOME_LEN; i += GENE_LEN) {
-        res += m_ga->mapping[m_genes.substr(i, GENE_LEN)] + " ";
+        string cur = "";
+        // TODO REMOVE (int) FOR FLOAT
+        for (int j = i; j < i + GENE_LEN; j++) cur += to_string((int)m_genes[j]);
+        res += m_ga->mapping[cur] + " ";
     }
     
     cout << res << endl;

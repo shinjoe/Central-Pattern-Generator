@@ -5,7 +5,7 @@
 #include "GeneticAlgo.h"
 
 int main(int argc, const char * argv[]) {
-    srand((int) time(NULL));
+    srand(time(NULL));
     
     GeneticAlgo g;
     g.run();
