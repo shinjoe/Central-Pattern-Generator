@@ -9,15 +9,18 @@ public:
     CentralPatternGenerator();
     void run();
 private:
+    
     Neuron A_left;
     Neuron B_left;
     Neuron C_left;
     Neuron M_left;
+    Neuron BS_left;
     
     Neuron A_right;
     Neuron B_right;
     Neuron C_right;
     Neuron M_right;
+    Neuron BS_right;
 };
 
 
