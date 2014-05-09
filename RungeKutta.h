@@ -9,12 +9,12 @@
 class RungeKutta {
 public:
     RungeKutta();
-    RungeKutta(std::vector<Neuron> network);
+    RungeKutta(std::vector<Neuron *>& network);
     void calcMeanMembranePotential(Neuron& n, double, double);
     void calcFiringFrequency(Neuron& n);
     double addWeightedNeighbors(Neuron& n);
 private:
-    std::vector<Neuron> m_network;
+    std::vector<Neuron *> m_network;
     double calcDerivative(double time, double m, double sigma, double tau);
 };
 

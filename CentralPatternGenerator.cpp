@@ -32,17 +32,17 @@ CentralPatternGenerator::CentralPatternGenerator() {
     C_right  = Neuron(c_right_init,  1, 1, INTER,     "C_right ");
     BS_right = Neuron(bs_init,       1, 1, BRAINSTEM, "BS_right");
     
-    m_network = vector<Neuron>();
-    m_network.push_back(M_left);
-    m_network.push_back(A_left);
-    m_network.push_back(B_left);
-    m_network.push_back(C_left);
-    m_network.push_back(BS_left);
-    m_network.push_back(M_right);
-    m_network.push_back(A_right);
-    m_network.push_back(B_right);
-    m_network.push_back(C_right);
-    m_network.push_back(BS_right);
+    m_network = vector<Neuron *>();
+    m_network.push_back(&M_left);
+    m_network.push_back(&A_left);
+    m_network.push_back(&B_left);
+    m_network.push_back(&C_left);
+    m_network.push_back(&BS_left);
+    m_network.push_back(&M_right);
+    m_network.push_back(&A_right);
+    m_network.push_back(&B_right);
+    m_network.push_back(&C_right);
+    m_network.push_back(&BS_right);
     
     m_solver = RungeKutta(m_network);
 
@@ -51,17 +51,17 @@ CentralPatternGenerator::CentralPatternGenerator() {
 
 void CentralPatternGenerator::run() {
     double time = 0.0;
-    for (int curTick = 0; curTick < 100; curTick++) {
+    for (int curTick = 0; curTick < 200; curTick++) {
         //cout << "Running tick "  << curTick << endl;
         //cout << "------------------------------------------" << endl;
         for (auto& n : m_network) {
-            m_solver.calcMeanMembranePotential(n, time, TIMESTEP);
+            m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
         }
         for (auto& n : m_network) {
-            m_solver.calcFiringFrequency(n);
+            m_solver.calcFiringFrequency(*n);
             //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
-            if (n.getName() == "M_left  ")
-                cout << time << "\t"  << n.getX() << endl;
+            if (n->getName() == "M_left  ")
+                cout << time << "\t"  << n->getX() << endl;
         }
         time += TIMESTEP;
     }

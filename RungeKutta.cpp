@@ -5,7 +5,7 @@ using namespace std;
 
 RungeKutta::RungeKutta() {}
 
-RungeKutta::RungeKutta(std::vector<Neuron> network) {
+RungeKutta::RungeKutta(std::vector<Neuron *>& network) {
     m_network = network;
 }
 
@@ -17,7 +17,7 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
         // there is a weight offset of 2 because the metadata we are
         // interested in starts 2 into the array
         // 0th and 1st are Tau and B
-        sum += weights[i + WEIGHT_OFFSET] * m_network[i].getX();
+        sum += weights[i + WEIGHT_OFFSET] * m_network[i]->getX();
     }
     
     return sum;

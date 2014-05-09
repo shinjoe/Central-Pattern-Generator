@@ -23,7 +23,7 @@ private:
     Neuron M_right;
     Neuron BS_right;
     
-    std::vector<Neuron> m_network;
+    std::vector<Neuron *> m_network;
     
     RungeKutta m_solver;
     
