@@ -52,7 +52,6 @@ CentralPatternGenerator::CentralPatternGenerator() {
 void CentralPatternGenerator::run() {
     double time = 0.0;
     for (int curTick = 0; curTick < 100; curTick++) {
-        
         //cout << "Running tick "  << curTick << endl;
         //cout << "------------------------------------------" << endl;
         for (auto& n : m_network) {
@@ -61,7 +60,7 @@ void CentralPatternGenerator::run() {
         for (auto& n : m_network) {
             m_solver.calcFiringFrequency(n);
             //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
-            if (n.getName() == "M_right ")
+            if (n.getName() == "M_left  ")
                 cout << time << "\t"  << n.getX() << endl;
         }
         time += TIMESTEP;

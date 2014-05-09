@@ -26,7 +26,6 @@ public:
 private:
     Chromosome m_chromosome;
     std::string m_name;
-    std::vector<Neuron *> m_neighbors;
     std::vector<double> m_weights;
     double m_m;
     double m_x;
