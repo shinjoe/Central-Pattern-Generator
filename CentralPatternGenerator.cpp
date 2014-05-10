@@ -2,13 +2,13 @@
 
 using namespace std;
 
-#define TIMESTEP .1
+#define TIMESTEP .01
 #define TRIAL_LEN 1 // seconds
 #define TRIAL_TICKS TRIAL_LEN/TIMESTEP
 
 CentralPatternGenerator::CentralPatternGenerator() {
     //                           tau  bias  Ml   Al   Bl     Cl  BSl  Mr   Ar    Br   Cr   BSr
-    vector<double> m_left_init  { 20,  0.2, 0,    0,  -8.2, -10,   0, 0,    0,    0, -4.1, 0};
+    vector<double> m_left_init  { 20,  0.2, 0,    0,  -8.2, -10,   5, 0,    0,    0, -4.1, 0};
     vector<double> a_left_init  {297,  2.9, 0,    0,     0,   0,   0, 0, -4.4, -3.4, -2.8, 0};
     vector<double> b_left_init  { 57, -6.4, 0, -2.1,  -5.8,   0, 8.2, 0,    0, -8.8, -9.6, 0};
     vector<double> c_left_init  { 20,  5.6, 0, -2.2,  -9.7,  -4, 2.9, 0,    0,    0, -9.9, 0};
@@ -51,18 +51,19 @@ CentralPatternGenerator::CentralPatternGenerator() {
 
 void CentralPatternGenerator::run() {
     double time = 0.0;
-    for (int curTick = 0; curTick < 200; curTick++) {
+    for (int curTick = 0; curTick < 5000; curTick++) {
         //cout << "Running tick "  << curTick << endl;
         //cout << "------------------------------------------" << endl;
         for (auto& n : m_network) {
             m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
-        }
-        for (auto& n : m_network) {
             m_solver.calcFiringFrequency(*n);
             //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
             if (n->getName() == "M_left  ")
-                cout << time << "\t"  << n->getX() << endl;
+                cout   << n->getX() << endl;
         }
+     //   for (auto& n : m_network) {
+        
+       // }
         time += TIMESTEP;
     }
 }

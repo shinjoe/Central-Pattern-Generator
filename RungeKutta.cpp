@@ -24,7 +24,7 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
 }
 
 double RungeKutta::calcDerivative(double time, double m, double sigma, double tau) {
-    return (-m + sigma)/tau;
+    return  (-m + sigma)/tau;
 }
 
 void RungeKutta::calcMeanMembranePotential(Neuron& n, double time, double timestep) {
