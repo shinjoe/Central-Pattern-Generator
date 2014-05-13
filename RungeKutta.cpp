@@ -17,36 +17,17 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
         // there is a weight offset of 2 because the metadata we are
         // interested in starts 2 into the array
         // 0th and 1st are Tau and B
-        sum += weights[i + WEIGHT_OFFSET] * m_network[i]->getX();
+        sum += weights[i + WEIGHT_OFFSET] * m_network[i]->getM();
     }
     
     return sum;
 }
 
 double RungeKutta::calcDerivative(double time, double m, double sigma, double tau) {
-    //int mult = 1;
-    //if (time > 5) mult = -1;
     return  (-m + sigma)/tau;
 }
 
-double RungeKutta::calcDmDt(Neuron& n) {
-    return (-n.getM() + addWeightedNeighbors(n))/n.getWeights()[0];
-}
 
-double RungeKutta::calcDxDt(Neuron& n) {
-    double expon = exp(n.getM() + n.getWeights()[1]);
-    double denom = 1 + expon;
-    return (-1.0/(denom * denom)) * expon * calcDmDt(n);
-}
-
-void RungeKutta::step(Neuron& n, double timestep) {
-    if (n.getType() == BRAINSTEM) return;
-    double dmdt = calcDmDt(n);
-    double dxdt = calcDxDt(n);
-    
-    n.setM(n.getM() + dmdt * timestep);
-    n.setX(n.getX() + dxdt * timestep);
-}
 
 void RungeKutta::calcMeanMembranePotential(Neuron& n, double time, double timestep) {
     if (n.getType() == BRAINSTEM) return;

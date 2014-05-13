@@ -51,18 +51,14 @@ CentralPatternGenerator::CentralPatternGenerator() {
 
 void CentralPatternGenerator::run() {
     double time = 0.0;
-    for (int curTick = 0; curTick < 300; curTick++) {
+    for (int curTick = 0; curTick < 1500; curTick++) {
         for (auto& n : m_network) {
-            //m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
-            //m_solver.calcFiringFrequency(*n);
+            m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
+            m_solver.calcFiringFrequency(*n);
             //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
-            m_solver.step(*n, TIMESTEP);
             if (n->getName() == "M_left  ")
                 cout << time << "\t" << n->getX() << endl;
         }
-       // for (auto& n : m_network) {
-        
-       // }
-        time += TIMESTEP;
+             time += TIMESTEP;
     }
 }
