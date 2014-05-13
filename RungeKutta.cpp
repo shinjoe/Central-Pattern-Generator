@@ -24,7 +24,28 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
 }
 
 double RungeKutta::calcDerivative(double time, double m, double sigma, double tau) {
+    //int mult = 1;
+    //if (time > 5) mult = -1;
     return  (-m + sigma)/tau;
+}
+
+double RungeKutta::calcDmDt(Neuron& n) {
+    return (-n.getM() + addWeightedNeighbors(n))/n.getWeights()[0];
+}
+
+double RungeKutta::calcDxDt(Neuron& n) {
+    double expon = exp(n.getM() + n.getWeights()[1]);
+    double denom = 1 + expon;
+    return (-1.0/(denom * denom)) * expon * calcDmDt(n);
+}
+
+void RungeKutta::step(Neuron& n, double timestep) {
+    if (n.getType() == BRAINSTEM) return;
+    double dmdt = calcDmDt(n);
+    double dxdt = calcDxDt(n);
+    
+    n.setM(n.getM() + dmdt * timestep);
+    n.setX(n.getX() + dxdt * timestep);
 }
 
 void RungeKutta::calcMeanMembranePotential(Neuron& n, double time, double timestep) {
@@ -37,13 +58,15 @@ void RungeKutta::calcMeanMembranePotential(Neuron& n, double time, double timest
     double k2 = calcDerivative(time + .5*timestep, m + (timestep/2)*k1, sigma, tau);
     double k3 = calcDerivative(time + .5*timestep, m + (timestep/2)*k2, sigma, tau);
     double k4 = calcDerivative(time + timestep, m + timestep*k3, sigma, tau);
-    n.setM(m + (1.0/6)*timestep*(k1 + 2*k2 + 2*k3 + k4));
+    
+    double newVal = m + (1.0/6)*timestep*(k1 + 2*k2 + 2*k3 + k4);
+    n.setM(newVal);
     
 }
 
 void RungeKutta::calcFiringFrequency(Neuron& n) {
     if (n.getType() == BRAINSTEM) return;
-    n.setX(1.0/(1 + exp(n.getM() + n.getWeights()[1])));
+    n.setX(1.0/(1 + exp(n.getM() +  n.getWeights()[1])));
 }
 
 

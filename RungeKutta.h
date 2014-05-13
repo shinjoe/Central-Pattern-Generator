@@ -12,6 +12,9 @@ public:
     RungeKutta(std::vector<Neuron *>& network);
     void calcMeanMembranePotential(Neuron& n, double, double);
     void calcFiringFrequency(Neuron& n);
+    void step(Neuron& n, double timestep);
+    double calcDmDt(Neuron& n);
+    double calcDxDt(Neuron& n);
     double addWeightedNeighbors(Neuron& n);
 private:
     std::vector<Neuron *> m_network;
