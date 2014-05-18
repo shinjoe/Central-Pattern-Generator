@@ -23,8 +23,13 @@ private:
     Neuron M_right;
     Neuron BS_right;
     
-    std::vector<Neuron *> m_network;
-
+    std::vector<Neuron> m_network;
+    std::vector<Neuron> m_copy;
+    
+    std::vector<Neuron> * m_cur;
+    std::vector<Neuron> * m_prev;
+    
+    bool m_using_network_one;
     
     
     RungeKutta m_solver;

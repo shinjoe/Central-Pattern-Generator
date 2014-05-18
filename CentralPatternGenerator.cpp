@@ -33,19 +33,33 @@ CentralPatternGenerator::CentralPatternGenerator() {
     C_right  = Neuron(c_right_init, -7.79,  .9, INTER,     "C_right ");
     BS_right = Neuron(bs_init,          1,   1, BRAINSTEM, "BS_right");
     
-    m_network = vector<Neuron *>();
-    m_network.push_back(&M_left);
-    m_network.push_back(&A_left);
-    m_network.push_back(&B_left);
-    m_network.push_back(&C_left);
-    m_network.push_back(&BS_left);
-    m_network.push_back(&M_right);
-    m_network.push_back(&A_right);
-    m_network.push_back(&B_right);
-    m_network.push_back(&C_right);
-    m_network.push_back(&BS_right);
+    m_network = vector<Neuron>();
+    m_network.push_back(M_left);
+    m_network.push_back(A_left);
+    m_network.push_back(B_left);
+    m_network.push_back(C_left);
+    m_network.push_back(BS_left);
+    m_network.push_back(M_right);
+    m_network.push_back(A_right);
+    m_network.push_back(B_right);
+    m_network.push_back(C_right);
+    m_network.push_back(BS_right);
+    
+    m_copy = vector<Neuron>();
+    m_copy.push_back(M_left);
+    m_copy.push_back(A_left);
+    m_copy.push_back(B_left);
+    m_copy.push_back(C_left);
+    m_copy.push_back(BS_left);
+    m_copy.push_back(M_right);
+    m_copy.push_back(A_right);
+    m_copy.push_back(B_right);
+    m_copy.push_back(C_right);
+    m_copy.push_back(BS_right);
     
     m_solver = RungeKutta(m_network);
+    
+    m_using_network_one = true;
 
 }
 
@@ -54,15 +68,17 @@ void CentralPatternGenerator::run() {
     ofstream outfile;
     outfile.open("out.txt");
     double time = 0.0;
-    for (int curTick = 0; curTick < 1000; curTick++) {
-        for (auto& n : m_network) {
-            m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
-            m_solver.calcFiringFrequency(*n);
-            //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
-            if (n->getName() == "M_left  ")
-                outfile << time << "\t" << n->getX() << endl;
+    for (int curTick = 0; curTick < 10000; curTick++) {
+        m_cur  = m_using_network_one ? &m_network : &m_copy;
+        m_prev = m_using_network_one ? &m_copy    : &m_network;
+        m_solver.updateNetwork(*m_prev);
+        for (int i = 0; i < m_cur->size(); i++) {
+            m_solver.calcMeanMembranePotential((*m_prev)[i], (*m_cur)[i], time, TIMESTEP);
+            m_solver.calcFiringFrequency((*m_cur)[i]);
         }
+        outfile << time << "\t" << m_network[0].getX() << endl;
         time += TIMESTEP;
+        m_using_network_one = !m_using_network_one;
     }
     outfile.close();
 }
