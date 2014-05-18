@@ -7,6 +7,7 @@
 #define GENE_LEN 4
 #define CROSSOVER_RATE 70 // percentage (e.g. * 100)
 #define MUTATION_RATE 1 // percentage
+#define MUTATION_RANGE .2
 
 using namespace std;
 
@@ -103,9 +104,7 @@ void Chromosome::calcFitness() {
     
 }
 
-char inverted(int x) {
-    return x == 0 ? 1 : 0;
-}
+
 
 void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CHROMOSOME_LEN>& child2) {
     int crossChance = rand() % 100;
@@ -126,7 +125,9 @@ void Chromosome::mutate(array<float, CHROMOSOME_LEN>& child) {
         int x = rand() % 100 + 1;
         if (x <= MUTATION_RATE) {
             cout << "mutated a gene" << endl;
-            child[i] = inverted(child[i]);
+            // new_value = old_value + r * rand
+            // rand is between -.5 and .5
+            child[i] = child[i] + MUTATION_RANGE * (x - 50)/100.0;
         }
         
     }
