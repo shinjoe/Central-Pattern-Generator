@@ -21,14 +21,14 @@ CentralPatternGenerator::CentralPatternGenerator() {
     BS_left = Neuron(bs_init,         1,  1, BRAINSTEM, "BS_left ");
     
     // right side is symmetric
-    vector<double> m_right_init  { 20,   .2, 0,    0,    0, -4.1, 0, 0,    0, -8.2, -10,   5};
+    vector<double> m_right_init  { 20,  0.2, 0,    0,    0, -4.1, 0, 0,    0, -8.2, -10,   5};
     vector<double> a_right_init  {297,  2.9, 0, -4.4, -3.4, -2.8, 0, 0,    0,    0,   0,   0};
     vector<double> b_right_init  { 57, -6.4, 0,    0, -8.8, -9.6, 0, 0, -2.1, -5.8,   0, 8.2};
     vector<double> c_right_init  { 20,  5.6, 0,    0,    0, -9.9, 0, 0, -2.2, -9.7,  -4, 2.9};
     vector<double> bs_right_init {};
     
     M_right  = Neuron(m_right_init, 4.39,  .01,  MOTO,    "M_right ");
-    A_right  = Neuron(a_right_init, -2.15,  .32, INTER,     "A_right ");
+    A_right  = Neuron(a_right_init, -2.15, .32, INTER,     "A_right ");
     B_right  = Neuron(b_right_init,  7.25,  .3, INTER,     "B_right ");
     C_right  = Neuron(c_right_init, -7.79,  .9, INTER,     "C_right ");
     BS_right = Neuron(bs_init,          1,   1, BRAINSTEM, "BS_right");
@@ -54,12 +54,12 @@ void CentralPatternGenerator::run() {
     ofstream outfile;
     outfile.open("out.txt");
     double time = 0.0;
-    for (int curTick = 0; curTick < 2000; curTick++) {
+    for (int curTick = 0; curTick < 1000; curTick++) {
         for (auto& n : m_network) {
             m_solver.calcMeanMembranePotential(*n, time, TIMESTEP);
             m_solver.calcFiringFrequency(*n);
             //cout << n.getName() << "  M: " << n.getM() << "  X: " << n.getX() << endl;
-            if (n->getName() == "C_left  ")
+            if (n->getName() == "M_left  ")
                 outfile << time << "\t" << n->getX() << endl;
         }
         time += TIMESTEP;
