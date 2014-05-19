@@ -29,11 +29,27 @@ void Chromosome::setFitness(double fitness) {
 }
 
 
+double time_const_conversion(double x) {
+    return 20 + 480 * x;
+}
+
+double bias_conversion(double x) {
+    return -10 + 20 * x;
+}
+
+double synaptic_weight_conversion(double x) {
+    return 10 * x;
+}
+
 void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
     vector<double> neuron_params = vector<double>(PARAM_LEN);
     for (int j = 0; j < NEURONS_TO_SET_UP; j++) {
         for (int i = 0; i < PARAM_LEN; i++) {
-            neuron_params[i] = m_genes[i + j * PARAM_LEN];
+            double param_val = m_genes[i + j * PARAM_LEN];
+            if (i == 0) param_val = time_const_conversion(param_val);
+            else if (i == 1) param_val = bias_conversion(param_val);
+            else param_val = synaptic_weight_conversion(param_val);
+            neuron_params[i] = param_val;
         }
         vec.push_back(neuron_params);
     }
@@ -45,7 +61,11 @@ void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
                 if (i < WEIGHT_MIDPOINT) offset = 5;
                 else offset = -5;
             }
-            neuron_params[i] = m_genes[offset + i + j * PARAM_LEN];
+            double param_val = m_genes[offset + i + j * PARAM_LEN];
+            if (i == 0) param_val = time_const_conversion(param_val);
+            else if (i == 1) param_val = bias_conversion(param_val);
+            else param_val = synaptic_weight_conversion(param_val);
+            neuron_params[i] = param_val;
         }
         vec.push_back(neuron_params);
     }
@@ -54,6 +74,19 @@ void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
 
 void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
     m_ga = ga;
+}
+
+void Chromosome::decode() {
+    for (int i = 0; i < NEURONS_TO_SET_UP; i++) {
+        for (int j = 0; j < PARAM_LEN; j++) {
+            double val = m_genes[i * PARAM_LEN + j];
+            if (j == 0) val = time_const_conversion(val);
+            else if (j == 1) val = bias_conversion(val);
+            else val = synaptic_weight_conversion(val);
+            cout << val << " ";
+        }
+        cout << "*" <<  endl;
+    }
 }
 
 void Chromosome::getRandomBits() {
@@ -120,7 +153,7 @@ double Chromosome::getFitness() {
 array<float, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
     // gets  number in range [0, totalFitness)
     double pointSelected = 0;
-    if (totalFitness != 0)
+    if (((int)totalFitness) != 0)
         pointSelected = (rand() % ((int) (totalFitness * 100))) / 100.0;
     double fitnessAccum = 0.0;
     for (int i = 0; i < len; i++) {

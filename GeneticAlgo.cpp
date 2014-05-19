@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 60
-#define POP_SIZE 50
+#define GIVE_UP_THRESHOLD 10
+#define POP_SIZE 10
 
 #include <array>
 
@@ -28,7 +28,7 @@ void GeneticAlgo::run() {
     while (!done) {
         double totalFitness = 0.0;
         for (auto& c : c_arr) {
-            c.printBits();
+            //c.printBits();
             vector<vector<double>> vec = vector<vector<double>>();
             c.to_vector(vec);
             cpg.initNet(vec);
@@ -78,6 +78,12 @@ void GeneticAlgo::run() {
         }
         
     }
+    vector<vector<double>> vec = vector<vector<double>>();
+    c_arr[0].to_vector(vec);
+    cpg.initNet(vec);
+    cpg.run();
+    cout <<  "final fitness " << cpg.calcFitness() << endl;
+    c_arr[0].decode();
 }
 
 GeneticAlgo::GeneticAlgo() {

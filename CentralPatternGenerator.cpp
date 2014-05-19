@@ -75,7 +75,7 @@ double absVal(double x) {
 double CentralPatternGenerator::calcFitness() {
     double sum_of_deltas = 0.0;
     for (int i = 1; i < CAPTURE_SIZE; i++) {
-        sum_of_deltas += absVal(m_last_few_points[i] - m_last_few_points[i- 1]);
+        sum_of_deltas += absVal(m_last_few_points[i] - m_last_few_points[i-1]);
     }
     return isnan(sum_of_deltas) ? 0 : sum_of_deltas;
 }
@@ -85,7 +85,7 @@ void CentralPatternGenerator::run() {
     ofstream outfile;
     outfile.open("out.txt");
     double time = 0.0;
-    int maxTicks = 100;
+    int maxTicks = 2000;
     int pointIndex = 0;
     for (int curTick = 0; curTick < maxTicks; curTick++) {
         m_cur  = m_using_network_one ? &m_network : &m_copy;
