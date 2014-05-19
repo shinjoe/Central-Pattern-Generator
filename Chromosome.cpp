@@ -4,7 +4,10 @@
 #include <cmath>
 
 #define TARGET 20
-#define GENE_LEN 4
+#define PARAM_LEN 12
+#define NEURONS_TO_SET_UP 4
+#define CONST_INDEX 1
+#define WEIGHT_MIDPOINT 7
 #define CROSSOVER_RATE 70 // percentage (e.g. * 100)
 #define MUTATION_RATE 1 // percentage
 #define MUTATION_RANGE .2
@@ -12,8 +15,8 @@
 using namespace std;
 
 Chromosome::Chromosome() {
-    m_genes = array<float, CHROMOSOME_LEN>();
     m_fitness = 0.0;
+    m_genes = array<float, CHROMOSOME_LEN>();
 }
 
 Chromosome::Chromosome(array<float, CHROMOSOME_LEN>& genes, double fitness) {
@@ -21,20 +24,48 @@ Chromosome::Chromosome(array<float, CHROMOSOME_LEN>& genes, double fitness) {
     m_fitness = fitness;
 }
 
+void Chromosome::setFitness(double fitness) {
+    m_fitness = fitness;
+}
+
+
+void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
+    vector<double> neuron_params = vector<double>(PARAM_LEN);
+    for (int j = 0; j < NEURONS_TO_SET_UP; j++) {
+        for (int i = 0; i < PARAM_LEN; i++) {
+            neuron_params[i] = m_genes[i + j * PARAM_LEN];
+        }
+        vec.push_back(neuron_params);
+    }
+    
+    for (int j = 0; j < NEURONS_TO_SET_UP; j++) {
+        for (int i = 0; i < PARAM_LEN; i++) {
+            int offset = 0;
+            if (i > CONST_INDEX) {
+                if (i < WEIGHT_MIDPOINT) offset = 5;
+                else offset = -5;
+            }
+            neuron_params[i] = m_genes[offset + i + j * PARAM_LEN];
+        }
+        vec.push_back(neuron_params);
+    }
+}
+
+
 void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
     m_ga = ga;
 }
 
 void Chromosome::getRandomBits() {
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
-        int x = rand() % 2;
-        m_genes[i] = x;
+        int x = rand() % 100;
+        m_genes[i] = x / 100.0;
     }
 }
 
 void Chromosome::printBits() {
     for (auto& g : m_genes) {
-        cout << g;
+        cout << g << " ";
     }
     cout << endl;
 }
@@ -51,59 +82,6 @@ bool isOp(string curElem) {
     return curElem == "+" || curElem == "-" ||
     curElem == "*" || curElem == "/";
 }
-
-void Chromosome::calcFitness() {
-    bool expectingNumber = true;
-    int index = 0;
-    int accum = 0;
-    string prevOp = "+";
-    while (index < CHROMOSOME_LEN) {
-        string curString = "";
-        // TODO: CHANGE TO NOT (INT)
-        for (int i = index; i < index + GENE_LEN; i++) curString += to_string((int)m_genes[i]);
-        string curElem = m_ga->mapping[curString];
-        if (curElem == "") {
-            index += GENE_LEN;
-            continue;
-        }
-        else if (expectingNumber) {
-            if (isNumber(curElem)) {
-                int curNum = stoi(curElem);
-                if (prevOp == "+") accum += curNum;
-                else if (prevOp == "-") accum -= curNum;
-                else if (prevOp == "*") accum *= curNum;
-                else if (prevOp == "/") {
-                    // disallow division by zero
-                    if (curNum == 0) {
-                        cout << "skipping division by zero" << endl;
-                        index += GENE_LEN;
-                        continue;
-                    }
-                    accum /= curNum;
-                }
-                else cerr << "UNEXPECTED OP" << endl;
-                expectingNumber = false;
-            }
-        } else if (!expectingNumber) {
-            if (isOp(curElem)) {
-                prevOp = curElem;
-                expectingNumber = true;
-            }
-        }
-        
-        index += GENE_LEN;
-    }
-    
-    // exit if we perfectly hit the target
-    if (accum - TARGET == 0) {
-        m_fitness = PERFECT_FITNESS;
-        return;
-    }
-    m_fitness = 1.0 / abs(accum - TARGET);
-    cout << "fitness: " << m_fitness << endl;
-    
-}
-
 
 
 void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CHROMOSOME_LEN>& child2) {
@@ -127,7 +105,8 @@ void Chromosome::mutate(array<float, CHROMOSOME_LEN>& child) {
             cout << "mutated a gene" << endl;
             // new_value = old_value + r * rand
             // rand is between -.5 and .5
-            child[i] = child[i] + MUTATION_RANGE * (x - 50)/100.0;
+            // min max locks the final value betwixt 0.0 and 1.0
+            child[i] = min(1.0, max(0.0, child[i] + MUTATION_RANGE * (x - 50)/100.0));
         }
         
     }
@@ -140,7 +119,9 @@ double Chromosome::getFitness() {
 
 array<float, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
     // gets  number in range [0, totalFitness)
-    double pointSelected = (rand() % ((int) (totalFitness * 100))) / 100.0;
+    double pointSelected = 0;
+    if (totalFitness != 0)
+        pointSelected = (rand() % ((int) (totalFitness * 100))) / 100.0;
     double fitnessAccum = 0.0;
     for (int i = 0; i < len; i++) {
         fitnessAccum += c_arr[i].getFitness();
@@ -149,19 +130,6 @@ array<float, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Ch
     }
     cerr << "Error with roulette select, should not reach this." << endl;
     exit(EXIT_FAILURE);
-}
-
-
-void Chromosome::decode() {
-    string res = "";
-    for (int i = 0; i < CHROMOSOME_LEN; i += GENE_LEN) {
-        string cur = "";
-        // TODO REMOVE (int) FOR FLOAT
-        for (int j = i; j < i + GENE_LEN; j++) cur += to_string((int)m_genes[j]);
-        res += m_ga->mapping[cur] + " ";
-    }
-    
-    cout << res << endl;
 }
 
 

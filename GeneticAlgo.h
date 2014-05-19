@@ -10,6 +10,7 @@ public:
     void run();
     std::map<std::string, std::string> mapping;
     bool done;
+    
 };
 
 

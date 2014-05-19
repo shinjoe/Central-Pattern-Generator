@@ -7,19 +7,22 @@
 #include <vector>
 
 
-#define CHROMOSOME_LEN 40
 #define PERFECT_FITNESS 9999.0
+#define CHROMOSOME_LEN 48
+
 
 class GeneticAlgo;
 class Chromosome {
 private:
     std::array<float, CHROMOSOME_LEN> m_genes;
-    double m_fitness;
     GeneticAlgo* m_ga;
+    double m_fitness;
     
 public:
     Chromosome();
     Chromosome(std::array<float, CHROMOSOME_LEN>&, double fitness=0.0);
+    void setFitness(double);
+    double getFitness();
     void getRandomBits();
     void printBits();
     void printDecoded();
@@ -28,8 +31,8 @@ public:
     static void mutate(std::array<float, CHROMOSOME_LEN>& child);
     static void crossover(std::array<float, CHROMOSOME_LEN>& child1, std::array<float, CHROMOSOME_LEN>& child2);
     static std::array<float, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], int len);
-    double getFitness();
     void decode();
+    void to_vector(std::vector<std::vector<double>>& vec);
     
 };
 

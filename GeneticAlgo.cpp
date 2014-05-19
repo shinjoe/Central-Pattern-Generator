@@ -1,9 +1,10 @@
 #include "GeneticAlgo.h"
 #include "Chromosome.h"
+#include "CentralPatternGenerator.h"
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 200
+#define GIVE_UP_THRESHOLD 60
 #define POP_SIZE 50
 
 #include <array>
@@ -12,7 +13,7 @@ using namespace std;
 
 void GeneticAlgo::run() {
     cout << "Running..." << endl;
-    
+    CentralPatternGenerator cpg;
     array<Chromosome, POP_SIZE> c_arr;
     int generationCount = 0;
     // initialize chromosomes with random genes
@@ -28,17 +29,22 @@ void GeneticAlgo::run() {
         double totalFitness = 0.0;
         for (auto& c : c_arr) {
             c.printBits();
+            vector<vector<double>> vec = vector<vector<double>>();
+            c.to_vector(vec);
+            cpg.initNet(vec);
+            cpg.run();
+            double curFitness = cpg.calcFitness();
+            c.setFitness(curFitness);
+            totalFitness += curFitness;
+            cout << "fit " << curFitness << endl;
             
-            c.calcFitness();
-            totalFitness += c.getFitness();
-            
-            if (c.getFitness() == PERFECT_FITNESS) {
+            /*if (curFitness == PERFECT_FITNESS) {
                 cout << "Solution found in " << generationCount << " generations." << endl;
                 c.printBits();
-                c.decode();
+                //c.decode();
                 done = true;
                 break;
-            }
+            }*/
         }
         
         if (done) break;
@@ -54,6 +60,7 @@ void GeneticAlgo::run() {
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);
             Chromosome::mutate(child2);
+            // TODO: add pruning? (weight = 0)
             
             nextGen[newGenCount++] = Chromosome(child1);
             nextGen[newGenCount++] = Chromosome(child2);
