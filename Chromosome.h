@@ -33,6 +33,8 @@ public:
     static std::array<float, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], int len);
     void decode();
     void to_vector(std::vector<std::vector<double>>& vec);
+    static void prune(std::array<float, CHROMOSOME_LEN>& child);
+
     
 };
 

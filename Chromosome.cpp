@@ -10,6 +10,7 @@
 #define WEIGHT_MIDPOINT 7
 #define CROSSOVER_RATE 70 // percentage (e.g. * 100)
 #define MUTATION_RATE 1 // percentage
+#define PRUNE_RATE 1 // percentage
 #define MUTATION_RANGE .2
 
 using namespace std;
@@ -131,15 +132,25 @@ void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CH
 }
 
 
+void Chromosome::prune(array<float, CHROMOSOME_LEN>& child) {
+    for (int i = 0; i < CHROMOSOME_LEN; i++) {
+        int x = rand() % 100 + 1;
+        if (x <= PRUNE_RATE) {
+            //cout << "pruned a gene" << endl;
+            child[i] = 0.0;
+        }
+    }
+}
+
 void Chromosome::mutate(array<float, CHROMOSOME_LEN>& child) {
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
         int x = rand() % 100 + 1;
         if (x <= MUTATION_RATE) {
-            cout << "mutated a gene" << endl;
+            //cout << "mutated a gene" << endl;
             // new_value = old_value + r * rand
             // rand is between -.5 and .5
             // min max locks the final value betwixt 0.0 and 1.0
-            child[i] = min(1.0, max(0.0, child[i] + MUTATION_RANGE * (x - 50)/100.0));
+            child[i] = min(1.0, max(0.0, child[i] + MUTATION_RANGE * (x - 50.0)/100.0));
         }
         
     }

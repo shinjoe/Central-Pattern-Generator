@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 10
-#define POP_SIZE 10
+#define GIVE_UP_THRESHOLD 15
+#define POP_SIZE 50
 
 #include <array>
 
@@ -60,7 +60,8 @@ void GeneticAlgo::run() {
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);
             Chromosome::mutate(child2);
-            // TODO: add pruning? (weight = 0)
+            Chromosome::prune(child1);
+            Chromosome::prune(child2);
             
             nextGen[newGenCount++] = Chromosome(child1);
             nextGen[newGenCount++] = Chromosome(child2);
@@ -78,12 +79,12 @@ void GeneticAlgo::run() {
         }
         
     }
-    vector<vector<double>> vec = vector<vector<double>>();
+   /* vector<vector<double>> vec = vector<vector<double>>();
     c_arr[0].to_vector(vec);
     cpg.initNet(vec);
     cpg.run();
     cout <<  "final fitness " << cpg.calcFitness() << endl;
-    c_arr[0].decode();
+    c_arr[0].decode();*/
 }
 
 GeneticAlgo::GeneticAlgo() {
