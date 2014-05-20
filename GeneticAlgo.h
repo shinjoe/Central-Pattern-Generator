@@ -8,7 +8,6 @@ class GeneticAlgo {
 public:
     GeneticAlgo();
     void run();
-    std::map<std::string, std::string> mapping;
     bool done;
     
 };

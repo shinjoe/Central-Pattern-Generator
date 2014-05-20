@@ -96,6 +96,7 @@ void CentralPatternGenerator::run() {
             m_solver.calcFiringFrequency((*m_cur)[i]);
         }
         outfile << time << "\t" << m_network[0].getX() << endl;
+        //cout << m_network[0].getM() << endl;
         if (curTick >= maxTicks - CAPTURE_SIZE)
             m_last_few_points[pointIndex++] = m_network[0].getX();
         time += TIMESTEP;

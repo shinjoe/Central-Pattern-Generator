@@ -43,6 +43,7 @@ double synaptic_weight_conversion(double x) {
 }
 
 void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
+    // left side of network
     vector<double> neuron_params = vector<double>(PARAM_LEN);
     for (int j = 0; j < NEURONS_TO_SET_UP; j++) {
         for (int i = 0; i < PARAM_LEN; i++) {
@@ -55,6 +56,7 @@ void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
         vec.push_back(neuron_params);
     }
     
+    // right side of network
     for (int j = 0; j < NEURONS_TO_SET_UP; j++) {
         for (int i = 0; i < PARAM_LEN; i++) {
             int offset = 0;
@@ -104,18 +106,6 @@ void Chromosome::printBits() {
     cout << endl;
 }
 
-bool isNumber(string curElem) {
-    return curElem == "0" || curElem == "1" ||
-    curElem == "2" || curElem == "3" ||
-    curElem == "4" || curElem == "5" ||
-    curElem == "6" || curElem == "7" ||
-    curElem == "8" || curElem == "9";
-}
-
-bool isOp(string curElem) {
-    return curElem == "+" || curElem == "-" ||
-    curElem == "*" || curElem == "/";
-}
 
 
 void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CHROMOSOME_LEN>& child2) {

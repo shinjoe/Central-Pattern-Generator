@@ -51,7 +51,7 @@ void RungeKutta::calcMeanMembranePotential(Neuron& n_old, Neuron& n_new, double 
 
 void RungeKutta::calcFiringFrequency(Neuron& n_new) {
     if (n_new.getType() == BRAINSTEM) return;
-    n_new.setX(1.0/(1 + exp(n_new.getM() +  n_new.getWeights()[1])));
+    n_new.setX(1.0/(1 + exp(n_new.getM() + n_new.getWeights()[1])));
 }
 
 

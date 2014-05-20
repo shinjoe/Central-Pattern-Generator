@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 15
-#define POP_SIZE 50
+#define GIVE_UP_THRESHOLD 5
+#define POP_SIZE 5
 
 #include <array>
 
@@ -89,22 +89,4 @@ void GeneticAlgo::run() {
 
 GeneticAlgo::GeneticAlgo() {
     done = false;
-    mapping = map<string, string>();
-    mapping["0000"] = "0";
-    mapping["0001"] = "1";
-    mapping["0010"] = "2";
-    mapping["0011"] = "3";
-    mapping["0100"] = "4";
-    mapping["0101"] = "5";
-    mapping["0110"] = "6";
-    mapping["0111"] = "7";
-    mapping["1000"] = "8";
-    mapping["1001"] = "9";
-    mapping["1010"] = "+";
-    mapping["1011"] = "-";
-    mapping["1100"] = "*";
-    mapping["1101"] = "/";
-    // null mappings for 1110 and 1111; unused
-    mapping["1110"] = "";
-    mapping["1111"] = "";
 }
