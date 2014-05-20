@@ -24,7 +24,7 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
     B_left  = Neuron(vec[2],  7.25, .3, INTER,     "B_left  ");
     C_left  = Neuron(vec[3], -7.79, .9, INTER,     "C_left  ");
     
-    BS_left = Neuron(bs_init,    1,  1, BRAINSTEM, "BS_left ");
+    BS_left = Neuron(bs_init,    2,  1, BRAINSTEM, "BS_left ");
     
     // right side is symmetric
     //vector<double> m_right_init  { 409.76,  -4.8, 0.2,   7.9,    8.6, .82, 4.6,  5.7,    7.4,  8.52, 9.6,   7.2};
@@ -36,7 +36,7 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
     A_right  = Neuron(vec[5], -2.15, .32, INTER,     "A_right ");
     B_right  = Neuron(vec[6],  7.25,  .3, INTER,     "B_right ");
     C_right  = Neuron(vec[7], -7.79,  .9, INTER,     "C_right ");
-    BS_right = Neuron(bs_init,    1,   1, BRAINSTEM, "BS_right");
+    BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right");
     
     m_network = vector<Neuron>();
     m_network.push_back(M_left);
@@ -85,7 +85,7 @@ void CentralPatternGenerator::run() {
     ofstream outfile;
     outfile.open("out.txt");
     double time = 0.0;
-    int maxTicks = 5000;
+    int maxTicks = 10000;
     int pointIndex = 0;
     for (int curTick = 0; curTick < maxTicks; curTick++) {
         m_cur  = m_using_network_one ? &m_network : &m_copy;

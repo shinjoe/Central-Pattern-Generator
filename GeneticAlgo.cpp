@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 5
-#define POP_SIZE 5
+#define GIVE_UP_THRESHOLD 30
+#define POP_SIZE 50
 
 #include <array>
 
@@ -54,8 +54,8 @@ void GeneticAlgo::run() {
         // keep going until we made POP_SIZE more children
         while (newGenCount < POP_SIZE) {
             // choose two parents to crossover
-            array<float, CHROMOSOME_LEN> child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
-            array<float, CHROMOSOME_LEN> child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
+            array<double, CHROMOSOME_LEN> child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
+            array<double, CHROMOSOME_LEN> child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
             
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);

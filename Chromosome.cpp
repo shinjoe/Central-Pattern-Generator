@@ -17,10 +17,10 @@ using namespace std;
 
 Chromosome::Chromosome() {
     m_fitness = 0.0;
-    m_genes = array<float, CHROMOSOME_LEN>();
+    m_genes = array<double, CHROMOSOME_LEN>();
 }
 
-Chromosome::Chromosome(array<float, CHROMOSOME_LEN>& genes, double fitness) {
+Chromosome::Chromosome(array<double, CHROMOSOME_LEN>& genes, double fitness) {
     m_genes = genes;
     m_fitness = fitness;
 }
@@ -108,7 +108,7 @@ void Chromosome::printBits() {
 
 
 
-void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CHROMOSOME_LEN>& child2) {
+void Chromosome::crossover(array<double, CHROMOSOME_LEN>& child1, array<double, CHROMOSOME_LEN>& child2) {
     int crossChance = rand() % 100;
     if (crossChance < CROSSOVER_RATE) {
         int x = rand() % CHROMOSOME_LEN;
@@ -122,7 +122,7 @@ void Chromosome::crossover(array<float, CHROMOSOME_LEN>& child1, array<float, CH
 }
 
 
-void Chromosome::prune(array<float, CHROMOSOME_LEN>& child) {
+void Chromosome::prune(array<double, CHROMOSOME_LEN>& child) {
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
         int x = rand() % 100 + 1;
         if (x <= PRUNE_RATE) {
@@ -132,7 +132,7 @@ void Chromosome::prune(array<float, CHROMOSOME_LEN>& child) {
     }
 }
 
-void Chromosome::mutate(array<float, CHROMOSOME_LEN>& child) {
+void Chromosome::mutate(array<double, CHROMOSOME_LEN>& child) {
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
         int x = rand() % 100 + 1;
         if (x <= MUTATION_RATE) {
@@ -151,7 +151,7 @@ double Chromosome::getFitness() {
 }
 
 
-array<float, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
+array<double, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
     // gets  number in range [0, totalFitness)
     double pointSelected = 0;
     if (((int)totalFitness) != 0)
