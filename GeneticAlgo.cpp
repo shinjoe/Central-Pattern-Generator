@@ -4,12 +4,13 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 30
-#define POP_SIZE 50
+#define GIVE_UP_THRESHOLD 600
+#define POP_SIZE 100
 
 #include <array>
 
 using namespace std;
+
 
 void GeneticAlgo::run() {
     cout << "Running..." << endl;

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-#define TIMESTEP .1
+#define TIMESTEP 1
 #define TRIAL_LEN 1 // seconds
 #define TRIAL_TICKS TRIAL_LEN/TIMESTEP
 
@@ -34,8 +34,8 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
     
     M_right  = Neuron(vec[4], 4.39,  .01,  MOTO,    "M_right ");
     A_right  = Neuron(vec[5], -2.15, .32, INTER,     "A_right ");
-    B_right  = Neuron(vec[6],  7.25,  .3, INTER,     "B_right ");
-    C_right  = Neuron(vec[7], -7.79,  .9, INTER,     "C_right ");
+    B_right  = Neuron(vec[6],  7.25, .3, INTER,     "B_right ");
+    C_right  = Neuron(vec[7], -7.79, .9, INTER,     "C_right ");
     BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right");
     
     m_network = vector<Neuron>();

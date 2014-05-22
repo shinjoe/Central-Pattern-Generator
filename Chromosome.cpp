@@ -9,8 +9,8 @@
 #define CONST_INDEX 1
 #define WEIGHT_MIDPOINT 7
 #define CROSSOVER_RATE 70 // percentage (e.g. * 100)
-#define MUTATION_RATE 1 // percentage
-#define PRUNE_RATE 1 // percentage
+#define MUTATION_RATE 40 // percentage
+#define PRUNE_RATE 10 // percentage
 #define MUTATION_RANGE .2
 
 using namespace std;
