@@ -25,7 +25,8 @@ void GeneticAlgo::run() {
     }
     
     cout << "----------------------------------------" << endl;
-    
+    Chromosome* bestChromosome = nullptr;
+    double bestFitness = 0.0;
     while (!done) {
         double totalFitness = 0.0;
         for (auto& c : c_arr) {
@@ -35,6 +36,10 @@ void GeneticAlgo::run() {
             cpg.initNet(vec);
             cpg.run();
             double curFitness = cpg.calcFitness();
+            if (curFitness > bestFitness) {
+                bestFitness = curFitness;
+                bestChromosome = &c;
+            }
             c.setFitness(curFitness);
             totalFitness += curFitness;
             cout << "fit " << curFitness << endl;
@@ -47,6 +52,10 @@ void GeneticAlgo::run() {
                 break;
             }*/
         }
+        cout << "************************************" << endl;
+        cout << "best fitness of cur " << bestFitness << endl;
+        bestChromosome->decode();
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
         
         if (done) break;
         

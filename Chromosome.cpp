@@ -154,7 +154,7 @@ double Chromosome::getFitness() {
 array<double, CHROMOSOME_LEN>& Chromosome::rouletteSelect(double totalFitness, Chromosome c_arr[], int len) {
     // gets  number in range [0, totalFitness)
     double pointSelected = 0;
-    if (((int)totalFitness) != 0)
+    if (((int)(100 * totalFitness)) != 0)
         pointSelected = (rand() % ((int) (totalFitness * 100))) / 100.0;
     double fitnessAccum = 0.0;
     for (int i = 0; i < len; i++) {
