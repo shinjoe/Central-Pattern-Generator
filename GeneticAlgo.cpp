@@ -29,6 +29,9 @@ void GeneticAlgo::run() {
     double bestFitness = 0.0;
     while (!done) {
         double totalFitness = 0.0;
+        double cur_best_fitness = 0.0;
+        bool first = true;
+        Chromosome* current_gen_best_chromosome = nullptr;
         for (auto& c : c_arr) {
             //c.printBits();
             vector<vector<double>> vec = vector<vector<double>>();
@@ -36,6 +39,17 @@ void GeneticAlgo::run() {
             cpg.initNet(vec);
             cpg.run();
             double curFitness = cpg.calcFitness();
+            if (first) {
+                cur_best_fitness = curFitness;
+                current_gen_best_chromosome = &c;
+                first = false;
+            } else {
+                if (curFitness > cur_best_fitness) {
+                    cur_best_fitness = curFitness;
+                    current_gen_best_chromosome = &c;
+                }
+            }
+            
             if (curFitness > bestFitness) {
                 bestFitness = curFitness;
                 bestChromosome = &c;
@@ -64,8 +78,8 @@ void GeneticAlgo::run() {
         // keep going until we made POP_SIZE more children
         while (newGenCount < POP_SIZE) {
             // choose two parents to crossover
-            array<double, CHROMOSOME_LEN> child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
-            array<double, CHROMOSOME_LEN> child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), POP_SIZE);
+            array<double, CHROMOSOME_LEN> child1 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), current_gen_best_chromosome, POP_SIZE);
+            array<double, CHROMOSOME_LEN> child2 = Chromosome::rouletteSelect(totalFitness, c_arr.data(), current_gen_best_chromosome, POP_SIZE);
             
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);

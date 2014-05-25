@@ -30,7 +30,7 @@ public:
     void calcFitness();
     static void mutate(std::array<double, CHROMOSOME_LEN>& child);
     static void crossover(std::array<double, CHROMOSOME_LEN>& child1, std::array<double, CHROMOSOME_LEN>& child2);
-    static std::array<double, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], int len);
+    static std::array<double, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], Chromosome* cur_best, int len);
     void decode();
     void to_vector(std::vector<std::vector<double>>& vec);
     static void prune(std::array<double, CHROMOSOME_LEN>& child);
