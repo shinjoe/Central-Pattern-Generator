@@ -12,7 +12,7 @@ CentralPatternGenerator::CentralPatternGenerator() {
     m_last_few_points = array<double, CAPTURE_SIZE>();
 }
 
-void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
+void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>> * pair_vec) {
       //                           tau  bias  Ml   Al   Bl     Cl  BSl  Mr   Ar    Br   Cr   BSr
     vector<double> m_left_init  { 20, -10, 0, 5.46, 0, 0,    .24,    0, 0,    5.78, 4.54, 1.4};
     vector<double> a_left_init  { 20, -10, 2.3, 3.32, 0, 4.08,    0,    0, 0,    0, 0, 3.96};
@@ -66,7 +66,7 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
     m_copy.push_back(C_right);
     m_copy.push_back(BS_right);
     
-    m_solver = RungeKutta(&m_network);
+    m_solver = RungeKutta(&m_network, pair_vec);
     
     m_using_network_one = true;
 

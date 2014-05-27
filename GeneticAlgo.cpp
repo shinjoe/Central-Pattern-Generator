@@ -12,47 +12,7 @@
 
 using namespace std;
 
-void init_syn_weights(vector<pair<int, int>>& vec, Chromosome& c) {
-    pair<int, int> ml_al = c.getSynWeightPair(0);
-    pair<int, int> ml_br = c.getSynWeightPair(8);
-    pair<int, int> ml_cr = c.getSynWeightPair(10);
-    pair<int, int> al_al = c.getSynWeightPair(12);
-    pair<int, int> al_cl = c.getSynWeightPair(16);
-    pair<int, int> bl_cl = c.getSynWeightPair(28);
-    pair<int, int> bl_ar = c.getSynWeightPair(30);
-    pair<int, int> bl_br = c.getSynWeightPair(32);
-    pair<int, int> cl_br = c.getSynWeightPair(44);
-    pair<int, int> blank(0, 0);
-    
-    // ml row
-    vec.push_back(ml_al);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(ml_br);
-    vec.push_back(ml_cr);
-    // al row
-    vec.push_back(al_al);
-    vec.push_back(blank);
-    vec.push_back(al_cl);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    // bl row
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(bl_cl);
-    vec.push_back(bl_ar);
-    vec.push_back(bl_br);
-    vec.push_back(blank);
-    // cl row
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(blank);
-    vec.push_back(cl_br);
-    vec.push_back(blank);
-}
+void init_syn_weights(vector<pair<int, int>>& vec, Chromosome& c);
 
 
 void GeneticAlgo::run() {
@@ -78,7 +38,7 @@ void GeneticAlgo::run() {
         
         for (int i = 0; i < cpg_arr.size(); i++) {
             vector<vector<double>> vec = vector<vector<double>>();
-            cpg_arr[i].initNet(vec);
+            cpg_arr[i].initNet(vec, &synaptic_spreading_weights);
             cpg_arr[i].run();
         }
         
@@ -149,4 +109,82 @@ void GeneticAlgo::run() {
 
 GeneticAlgo::GeneticAlgo() {
     done = false;
+}
+
+void init_syn_weights(vector<pair<int, int>>& vec, Chromosome& c) {
+    pair<int, int> ml_al = c.getSynWeightPair(0);
+    pair<int, int> ml_br = c.getSynWeightPair(8);
+    pair<int, int> ml_cr = c.getSynWeightPair(10);
+    pair<int, int> al_al = c.getSynWeightPair(12);
+    pair<int, int> al_cl = c.getSynWeightPair(16);
+    pair<int, int> bl_cl = c.getSynWeightPair(28);
+    pair<int, int> bl_ar = c.getSynWeightPair(30);
+    pair<int, int> bl_br = c.getSynWeightPair(32);
+    pair<int, int> cl_br = c.getSynWeightPair(44);
+    pair<int, int> blank(0, 0);
+    
+    /* left side */
+    // ml row
+    vec.push_back(ml_al);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(ml_br);
+    vec.push_back(ml_cr);
+    // al row
+    vec.push_back(al_al);
+    vec.push_back(blank);
+    vec.push_back(al_cl);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    // bl row
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(bl_cl);
+    vec.push_back(bl_ar);
+    vec.push_back(bl_br);
+    vec.push_back(blank);
+    // cl row
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(cl_br);
+    vec.push_back(blank);
+    
+    /* right side */
+    // mr row
+    vec.push_back(blank);
+    vec.push_back(ml_br);
+    vec.push_back(ml_cr);
+    vec.push_back(ml_al);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    
+    // ar row
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(al_al);
+    vec.push_back(blank);
+    vec.push_back(al_cl);
+    
+    // br row
+    vec.push_back(bl_ar);
+    vec.push_back(bl_br);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(bl_cl);
+    
+    // cr row
+    vec.push_back(blank);
+    vec.push_back(cl_br);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    vec.push_back(blank);
+    
+    
 }

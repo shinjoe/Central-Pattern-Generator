@@ -5,8 +5,9 @@ using namespace std;
 
 RungeKutta::RungeKutta() {}
 
-RungeKutta::RungeKutta(vector<Neuron> * network) {
+RungeKutta::RungeKutta(vector<Neuron> * network, vector<pair<int, int>> * p) {
     m_cur_network = network;
+    m_syn_spread_weights = p;
 }
 
 void RungeKutta::updateNetwork(vector<Neuron> * network) {
