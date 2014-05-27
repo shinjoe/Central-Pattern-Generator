@@ -36,10 +36,10 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
     vector<double> c_right_init  { 20, -10, 2.24, 0,   3.02, 0, 0, 0,    0, 0, 0, 6.88};*/
     
     // vec[4]
-    M_right  = Neuron(vec[4], 4.39,  .01,  MOTO,    "M_right ");
+    M_right  = Neuron(vec[4], 4.39,  .01,  MOTO,     "M_right ");
     A_right  = Neuron(vec[5], -2.15, .32, INTER,     "A_right ");
-    B_right  = Neuron(vec[6],  7.25, .3, INTER,     "B_right ");
-    C_right  = Neuron(vec[7], -7.79, .9, INTER,     "C_right ");
+    B_right  = Neuron(vec[6],  7.25,  .3, INTER,     "B_right ");
+    C_right  = Neuron(vec[7], -7.79,  .9, INTER,     "C_right ");
     BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right");
     
     m_network = vector<Neuron>();
