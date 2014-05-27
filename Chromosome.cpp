@@ -10,8 +10,9 @@
 #define WEIGHT_MIDPOINT 7
 #define CROSSOVER_RATE 70 // percentage (e.g. * 100)
 #define MUTATION_RATE 40 // percentage
-#define PRUNE_RATE 10 // percentage
+#define PRUNE_RATE 0 // percentage
 #define MUTATION_RANGE .2
+#define SPREAD_MAX 3
 
 using namespace std;
 
@@ -41,6 +42,7 @@ double bias_conversion(double x) {
 double synaptic_weight_conversion(double x) {
     return 10 * x;
 }
+
 
 void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
     // left side of network
@@ -104,6 +106,17 @@ void Chromosome::printBits() {
         cout << g << " ";
     }
     cout << endl;
+}
+
+int syn_spread_conversion(double x) {
+    return (int) round(SPREAD_MAX * x);
+}
+
+std::pair<int, int> Chromosome::getSynWeightPair(int index) {
+    pair<int, int> res(0, 0);
+    res.first = syn_spread_conversion(m_genes[index]);
+    res.second = syn_spread_conversion(m_genes[index + 1]);
+    return res;
 }
 
 

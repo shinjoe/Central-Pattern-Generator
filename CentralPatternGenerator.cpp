@@ -14,32 +14,32 @@ CentralPatternGenerator::CentralPatternGenerator() {
 
 void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
       //                           tau  bias  Ml   Al   Bl     Cl  BSl  Mr   Ar    Br   Cr   BSr
-    /*vector<double> m_left_init  { 20, -10, 0, 5.46, 0, 0,    .24,    0, 0,    5.78, 4.54, 1.4};
+    vector<double> m_left_init  { 20, -10, 0, 5.46, 0, 0,    .24,    0, 0,    5.78, 4.54, 1.4};
     vector<double> a_left_init  { 20, -10, 2.3, 3.32, 0, 4.08,    0,    0, 0,    0, 0, 3.96};
     vector<double> b_left_init  { 20, -10, 0,    0, 0, 6.72,    0,    0, 1.26, 7.28, 0, 3.08};
-    vector<double> c_left_init  { 20, -10, 0,    0, 0, 0, 6.88, 2.24, 0,   3.02, 0, 0};*/
+    vector<double> c_left_init  { 20, -10, 0,    0, 0, 0, 6.88, 2.24, 0,   3.02, 0, 0};
     
     vector<double> bs_init {};
     
     // vec[0]
-    M_left  = Neuron(vec[0], -.605, .6, MOTO,      "M_left  ");
-    A_left  = Neuron(vec[1], -2.05, .3, INTER,     "A_left  ");
-    B_left  = Neuron(vec[2],  7.25, .3, INTER,     "B_left  ");
-    C_left  = Neuron(vec[3], -7.79, .9, INTER,     "C_left  ");
+    M_left  = Neuron(m_left_init, -.605, .6, MOTO,      "M_left  ");
+    A_left  = Neuron(a_left_init, -2.05, .3, INTER,     "A_left  ");
+    B_left  = Neuron(b_left_init,  7.25, .3, INTER,     "B_left  ");
+    C_left  = Neuron(c_left_init, -7.79, .9, INTER,     "C_left  ");
     
     BS_left = Neuron(bs_init,    2,  1, BRAINSTEM, "BS_left ");
     
     // right side is symmetric
-    /*vector<double> m_right_init  { 20, -10, 0, 0,    5.78, 4.54, 1.4, 0, 5.46, 0, 0,    .24};
+    vector<double> m_right_init  { 20, -10, 0, 0,    5.78, 4.54, 1.4, 0, 5.46, 0, 0,    .24};
     vector<double> a_right_init  { 20, -10, 0, 0,    0, 0, 3.96, 2.3, 3.32, 0, 4.08,    0};
     vector<double> b_right_init  { 20, -10, 0, 1.26, 7.28, 0, 3.08, 0,    0, 0, 6.72,    0};
-    vector<double> c_right_init  { 20, -10, 2.24, 0,   3.02, 0, 0, 0,    0, 0, 0, 6.88};*/
+    vector<double> c_right_init  { 20, -10, 2.24, 0,   3.02, 0, 0, 0,    0, 0, 0, 6.88};
     
     // vec[4]
-    M_right  = Neuron(vec[4], 4.39,  .01,  MOTO,     "M_right ");
-    A_right  = Neuron(vec[5], -2.15, .32, INTER,     "A_right ");
-    B_right  = Neuron(vec[6],  7.25,  .3, INTER,     "B_right ");
-    C_right  = Neuron(vec[7], -7.79,  .9, INTER,     "C_right ");
+    M_right  = Neuron(m_right_init, 4.39,  .01,  MOTO,     "M_right ");
+    A_right  = Neuron(a_right_init, -2.15, .32, INTER,     "A_right ");
+    B_right  = Neuron(b_right_init,  7.25,  .3, INTER,     "B_right ");
+    C_right  = Neuron(c_right_init, -7.79,  .9, INTER,     "C_right ");
     BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right");
     
     m_network = vector<Neuron>();
@@ -74,6 +74,10 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec) {
 
 double absVal(double x) {
     return x < 0 ? -x : x;
+}
+
+double CentralPatternGenerator::calcIntersegmentalFitness() {
+    return 0.0;
 }
 
 double CentralPatternGenerator::calcFitness() {

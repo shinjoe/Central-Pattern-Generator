@@ -8,7 +8,7 @@
 
 
 #define PERFECT_FITNESS 9999.0
-#define CHROMOSOME_LEN 48
+#define CHROMOSOME_LEN 18
 
 
 class GeneticAlgo;
@@ -28,6 +28,7 @@ public:
     void printDecoded();
     void setGeneticAlgo(GeneticAlgo* ga);
     void calcFitness();
+    std::pair<int, int> getSynWeightPair(int index);
     static void mutate(std::array<double, CHROMOSOME_LEN>& child);
     static void crossover(std::array<double, CHROMOSOME_LEN>& child1, std::array<double, CHROMOSOME_LEN>& child2);
     static std::array<double, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], Chromosome* cur_best, int len);

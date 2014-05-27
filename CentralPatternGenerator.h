@@ -14,6 +14,7 @@ public:
     void initNet(std::vector<std::vector<double>>& chromosome);
     void run();
     double calcFitness();
+    double calcIntersegmentalFitness();
 private:
     
     Neuron A_left;
