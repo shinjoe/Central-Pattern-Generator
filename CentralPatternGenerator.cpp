@@ -87,23 +87,24 @@ double absVal(double x) {
 
 int CentralPatternGenerator::findPeakIndex(int starting_index) {
     int index = -1;
-    for (int i = starting_index; i > 0; i--) {
-        if (m_last_few_points[i] > m_last_few_points[i+1] && m_last_few_points[i] > m_last_few_points[i-1])
+    for (int i = starting_index; i > 5; i--) {
+        if ((m_last_few_points[i] > m_last_few_points[i+5]) && (m_last_few_points[i] > m_last_few_points[i-5]))
             return i;
     }
     return index;
 }
 
 double CentralPatternGenerator::calcIntersegmentalFitness(CentralPatternGenerator& nextCpg) {
-    int rightmost_peak_index = findPeakIndex(CAPTURE_SIZE - 2);
+    int rightmost_peak_index = findPeakIndex(CAPTURE_SIZE - 5);
     if (rightmost_peak_index == -1) return 0;
     int penultimate_right_peak_index = findPeakIndex(rightmost_peak_index - 1);
     if (penultimate_right_peak_index == -1) return 0;
     double lambda = rightmost_peak_index - penultimate_right_peak_index;
-    int rightmost_peak_second_cpg_index = nextCpg.findPeakIndex(CAPTURE_SIZE - 2);
+    int rightmost_peak_second_cpg_index = nextCpg.findPeakIndex(CAPTURE_SIZE - 5);
     if (rightmost_peak_second_cpg_index == -1) return 0;
     double delta_t = absVal(rightmost_peak_second_cpg_index - rightmost_peak_index);
-    return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + .1));
+    
+    return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + 1));
 }
 
 double CentralPatternGenerator::calcFitness() {
@@ -119,7 +120,7 @@ void CentralPatternGenerator::run() {
     ofstream outfile;
     outfile.open("out.txt");
     double time = 0.0;
-    int maxTicks = 5000;
+    int maxTicks = 500;
     int pointIndex = 0;
     for (int curTick = 0; curTick < maxTicks; curTick++) {
         m_cur  = m_using_network_one ? &m_network : &m_copy;
