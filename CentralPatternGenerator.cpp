@@ -109,7 +109,7 @@ double CentralPatternGenerator::calcIntersegmentalFitness(CentralPatternGenerato
     cout << "delta t " <<  delta_t << endl;
     cout << "lambda " << lambda << endl;
     if (delta_t == 0) return 0;
-    return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + 1));
+    return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + 1)) ;
 }
 
 double CentralPatternGenerator::calcFitness() {
