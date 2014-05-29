@@ -37,8 +37,7 @@ private:
     std::array<double, CAPTURE_SIZE> m_last_few_points;
     
     std::array<CentralPatternGenerator, 11> * m_cpg_arr;
-    int m_index;
-    
+    int m_cpg_index;
     std::vector<Neuron> m_network;
     std::vector<Neuron> m_copy;
     

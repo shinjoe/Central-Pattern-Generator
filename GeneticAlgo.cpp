@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#define GIVE_UP_THRESHOLD 200
+#define GIVE_UP_THRESHOLD 100
 #define POP_SIZE 100
 #define NUM_SEGMENTS 11
 
@@ -33,49 +33,51 @@ void GeneticAlgo::run() {
     double bestFitness = 0.0;
     while (!done) {
         
-        
-        for (int i = 0; i < cpg_arr.size(); i++) {
-            vector<pair<int, int>> synaptic_spreading_weights;
-            init_syn_weights(synaptic_spreading_weights, c_arr[i]);
-
-            vector<vector<double>> vec = vector<vector<double>>();
-            cpg_arr[i].initNet(vec, synaptic_spreading_weights, &cpg_arr, i);
-        }
-        
-        for (int k = 0; k < cpg_arr.size(); k++) {
-            cpg_arr[k].run();
-        }
-        
         double totalFitness = 0.0;
-        double cur_best_fitness = 0.0;
-        bool first = true;
         Chromosome* current_gen_best_chromosome = nullptr;
-        for (int j = 0; j < cpg_arr.size() - 1; j++) {
-            double curFitness = cpg_arr[j].calcIntersegmentalFitness(cpg_arr[j+1]);
-            if (first) {
-                cur_best_fitness = curFitness;
-                current_gen_best_chromosome = &c_arr[j];
-                first = false;
-            } else {
-                if (curFitness > cur_best_fitness) {
+
+      //  for (int p = 0; p < POP_SIZE; p++) {
+            for (int i = 0; i < cpg_arr.size(); i++) {
+                vector<pair<int, int>> synaptic_spreading_weights;
+                init_syn_weights(synaptic_spreading_weights, c_arr[i]);
+
+                vector<vector<double>> vec = vector<vector<double>>();
+                cpg_arr[i].initNet(vec, synaptic_spreading_weights, &cpg_arr, i);
+            }
+        
+            for (int k = 0; k < cpg_arr.size(); k++) {
+                cpg_arr[k].run();
+            }
+        
+            
+            double cur_best_fitness = 0.0;
+            bool first = true;
+            for (int j = 0; j < cpg_arr.size() - 1; j++) {
+                double curFitness = cpg_arr[j].calcIntersegmentalFitness(cpg_arr[j+1]);
+                if (first) {
                     cur_best_fitness = curFitness;
                     current_gen_best_chromosome = &c_arr[j];
+                    first = false;
+                } else {
+                    if (curFitness > cur_best_fitness) {
+                        cur_best_fitness = curFitness;
+                        current_gen_best_chromosome = &c_arr[j];
+                    }
                 }
+                
+                if (curFitness > bestFitness) {
+                    bestFitness = curFitness;
+                    bestChromosome = &c_arr[j];
+                }
+                c_arr[j].setFitness(curFitness);
+                totalFitness += curFitness;
+                cout << "fit " << curFitness << endl;
             }
-            
-            if (curFitness > bestFitness) {
-                bestFitness = curFitness;
-                bestChromosome = &c_arr[j];
-            }
-            c_arr[j].setFitness(curFitness);
-            totalFitness += curFitness;
-            cout << "fit " << curFitness << endl;
-        }
-        cout << "************************************" << endl;
-        cout << "best fitness of cur " << bestFitness << endl;
-        //bestChromosome->decode();
-        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
-        
+            cout << "************************************" << endl;
+            cout << "best fitness of cur " << bestFitness << endl;
+            //bestChromosome->decode();
+            cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+        //}
         if (done) break;
         
         array<Chromosome, POP_SIZE> nextGen;

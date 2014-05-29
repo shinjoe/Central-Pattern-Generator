@@ -6,8 +6,9 @@ using namespace std;
 
 #define TIMESTEP 1
 #define TRIAL_LEN 1 // seconds
-#define DUTY_CYCLE .091 //  1/11, because we have 11 segments 
+#define DUTY_CYCLE .091 //  1/11, because we have 11 segments
 #define TRIAL_TICKS TRIAL_LEN/TIMESTEP
+#define NEIGHBOR_WIDTH 5
 
 CentralPatternGenerator::CentralPatternGenerator() {
     m_last_few_points = array<double, CAPTURE_SIZE>();
@@ -20,7 +21,9 @@ double CentralPatternGenerator::findXOf(int index) {
 void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>>&  pair_vec,
                                       array<CentralPatternGenerator, 11> * cpg_arr, int cpg_index) {
     
-
+    
+    m_cpg_index = cpg_index;
+    m_cpg_arr = cpg_arr;
     
       //                           tau  bias  Ml   Al   Bl     Cl  BSl  Mr   Ar    Br   Cr   BSr
     vector<double> m_left_init  { 20, -10, 0, 5.46, 0, 0,    .24,    0, 0,    5.78, 4.54, 1.4};
@@ -87,23 +90,25 @@ double absVal(double x) {
 
 int CentralPatternGenerator::findPeakIndex(int starting_index) {
     int index = -1;
-    for (int i = starting_index; i > 5; i--) {
-        if ((m_last_few_points[i] > m_last_few_points[i+5]) && (m_last_few_points[i] > m_last_few_points[i-5]))
+    for (int i = starting_index; i > NEIGHBOR_WIDTH; i--) {
+        if ((m_last_few_points[i] > m_last_few_points[i+NEIGHBOR_WIDTH]) && (m_last_few_points[i] > m_last_few_points[i-NEIGHBOR_WIDTH]))
             return i;
     }
     return index;
 }
 
 double CentralPatternGenerator::calcIntersegmentalFitness(CentralPatternGenerator& nextCpg) {
-    int rightmost_peak_index = findPeakIndex(CAPTURE_SIZE - 5);
+    int rightmost_peak_index = findPeakIndex(CAPTURE_SIZE - NEIGHBOR_WIDTH);
     if (rightmost_peak_index == -1) return 0;
-    int penultimate_right_peak_index = findPeakIndex(rightmost_peak_index - 1);
+    int penultimate_right_peak_index = findPeakIndex(rightmost_peak_index - NEIGHBOR_WIDTH);
     if (penultimate_right_peak_index == -1) return 0;
     double lambda = rightmost_peak_index - penultimate_right_peak_index;
-    int rightmost_peak_second_cpg_index = nextCpg.findPeakIndex(CAPTURE_SIZE - 5);
+    int rightmost_peak_second_cpg_index = nextCpg.findPeakIndex(CAPTURE_SIZE - NEIGHBOR_WIDTH);
     if (rightmost_peak_second_cpg_index == -1) return 0;
     double delta_t = absVal(rightmost_peak_second_cpg_index - rightmost_peak_index);
-    
+    cout << "delta t " <<  delta_t << endl;
+    cout << "lambda " << lambda << endl;
+    if (delta_t == 0) return 0;
     return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + 1));
 }
 
@@ -117,8 +122,12 @@ double CentralPatternGenerator::calcFitness() {
 
 
 void CentralPatternGenerator::run() {
-    ofstream outfile;
-    outfile.open("out.txt");
+    ofstream outfile0;
+    ofstream outfile1;
+    if (m_cpg_index == 0)
+        outfile0.open("out0.txt");
+    if (m_cpg_index == 1)
+        outfile1.open("out1.txt");
     double time = 0.0;
     int maxTicks = 500;
     int pointIndex = 0;
@@ -130,12 +139,15 @@ void CentralPatternGenerator::run() {
             m_solver.calcMeanMembranePotential((*m_prev)[i], (*m_cur)[i], time, TIMESTEP);
             m_solver.calcFiringFrequency((*m_cur)[i]);
         }
-        outfile << time << "\t" << m_network[0].getX() << endl;
-        //cout << m_network[0].getM() << endl;
+        if (m_cpg_index == 0)
+            outfile0 << time << "\t" << (*m_cur)[0].getX() << endl;
+        if (m_cpg_index == 1)
+            outfile1 << time << "\t" << /*(*m_cpg_arr)[3].findXOf(0)*/ (*m_cur)[0].getX() << endl;
         if (curTick >= maxTicks - CAPTURE_SIZE)
             m_last_few_points[pointIndex++] = m_network[0].getX();
         time += TIMESTEP;
         m_using_network_one = !m_using_network_one;
     }
-    outfile.close();
+    outfile0.close();
+    outfile1.close();
 }
