@@ -6,13 +6,22 @@ using namespace std;
 
 #define TIMESTEP 1
 #define TRIAL_LEN 1 // seconds
+#define DUTY_CYCLE .091 //  1/11, because we have 11 segments 
 #define TRIAL_TICKS TRIAL_LEN/TIMESTEP
 
 CentralPatternGenerator::CentralPatternGenerator() {
     m_last_few_points = array<double, CAPTURE_SIZE>();
 }
 
-void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>> * pair_vec) {
+double CentralPatternGenerator::findXOf(int index) {
+    return m_network[index].getX();
+}
+
+void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>> * pair_vec,
+                                      array<CentralPatternGenerator, 11> * cpg_arr, int cpg_index) {
+    
+
+    
       //                           tau  bias  Ml   Al   Bl     Cl  BSl  Mr   Ar    Br   Cr   BSr
     vector<double> m_left_init  { 20, -10, 0, 5.46, 0, 0,    .24,    0, 0,    5.78, 4.54, 1.4};
     vector<double> a_left_init  { 20, -10, 2.3, 3.32, 0, 4.08,    0,    0, 0,    0, 0, 3.96};
@@ -22,12 +31,12 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<i
     vector<double> bs_init {};
     
     // vec[0]
-    M_left  = Neuron(m_left_init, -.605, .6, MOTO,      "M_left  ");
-    A_left  = Neuron(a_left_init, -2.05, .3, INTER,     "A_left  ");
-    B_left  = Neuron(b_left_init,  7.25, .3, INTER,     "B_left  ");
-    C_left  = Neuron(c_left_init, -7.79, .9, INTER,     "C_left  ");
+    M_left  = Neuron(m_left_init, -.605, .6, MOTO,      "M_left  ", 0);
+    A_left  = Neuron(a_left_init, -2.05, .3, INTER,     "A_left  ", 1);
+    B_left  = Neuron(b_left_init,  7.25, .3, INTER,     "B_left  ", 2);
+    C_left  = Neuron(c_left_init, -7.79, .9, INTER,     "C_left  ", 3);
     
-    BS_left = Neuron(bs_init,    2,  1, BRAINSTEM, "BS_left ");
+    BS_left = Neuron(bs_init,    2,  1, BRAINSTEM, "BS_left ", 4);
     
     // right side is symmetric
     vector<double> m_right_init  { 20, -10, 0, 0,    5.78, 4.54, 1.4, 0, 5.46, 0, 0,    .24};
@@ -36,11 +45,11 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<i
     vector<double> c_right_init  { 20, -10, 2.24, 0,   3.02, 0, 0, 0,    0, 0, 0, 6.88};
     
     // vec[4]
-    M_right  = Neuron(m_right_init, 4.39,  .01,  MOTO,     "M_right ");
-    A_right  = Neuron(a_right_init, -2.15, .32, INTER,     "A_right ");
-    B_right  = Neuron(b_right_init,  7.25,  .3, INTER,     "B_right ");
-    C_right  = Neuron(c_right_init, -7.79,  .9, INTER,     "C_right ");
-    BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right");
+    M_right  = Neuron(m_right_init, 4.39,  .01,  MOTO,     "M_right ", 5);
+    A_right  = Neuron(a_right_init, -2.15, .32, INTER,     "A_right ", 6);
+    B_right  = Neuron(b_right_init,  7.25,  .3, INTER,     "B_right ", 7);
+    C_right  = Neuron(c_right_init, -7.79,  .9, INTER,     "C_right ", 8);
+    BS_right = Neuron(bs_init,    2,   1, BRAINSTEM, "BS_right", 9);
     
     m_network = vector<Neuron>();
     m_network.push_back(M_left);
@@ -66,7 +75,7 @@ void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<i
     m_copy.push_back(C_right);
     m_copy.push_back(BS_right);
     
-    m_solver = RungeKutta(&m_network, pair_vec);
+    m_solver = RungeKutta(&m_network, pair_vec, cpg_index, cpg_arr);
     
     m_using_network_one = true;
 
@@ -76,8 +85,25 @@ double absVal(double x) {
     return x < 0 ? -x : x;
 }
 
-double CentralPatternGenerator::calcIntersegmentalFitness() {
-    return 0.0;
+int CentralPatternGenerator::findPeakIndex(int starting_index) {
+    int index = -1;
+    for (int i = starting_index; i > 0; i--) {
+        if (m_last_few_points[i] > m_last_few_points[i+1] && m_last_few_points[i] > m_last_few_points[i-1])
+            return i;
+    }
+    return index;
+}
+
+double CentralPatternGenerator::calcIntersegmentalFitness(CentralPatternGenerator& nextCpg) {
+    int rightmost_peak_index = findPeakIndex(CAPTURE_SIZE - 2);
+    if (rightmost_peak_index == -1) return 0;
+    int penultimate_right_peak_index = findPeakIndex(rightmost_peak_index - 1);
+    if (penultimate_right_peak_index == -1) return 0;
+    double lambda = rightmost_peak_index - penultimate_right_peak_index;
+    int rightmost_peak_second_cpg_index = nextCpg.findPeakIndex(CAPTURE_SIZE - 2);
+    if (rightmost_peak_second_cpg_index == -1) return 0;
+    double delta_t = absVal(rightmost_peak_second_cpg_index - rightmost_peak_index);
+    return absVal(1.0 / (delta_t / lambda - DUTY_CYCLE + .1));
 }
 
 double CentralPatternGenerator::calcFitness() {

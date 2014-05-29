@@ -33,21 +33,25 @@ void GeneticAlgo::run() {
     double bestFitness = 0.0;
     while (!done) {
         
-        vector<pair<int, int>> synaptic_spreading_weights;
-        init_syn_weights(synaptic_spreading_weights, c_arr[0]);
         
         for (int i = 0; i < cpg_arr.size(); i++) {
+            vector<pair<int, int>> synaptic_spreading_weights;
+            init_syn_weights(synaptic_spreading_weights, c_arr[i]);
+
             vector<vector<double>> vec = vector<vector<double>>();
-            cpg_arr[i].initNet(vec, &synaptic_spreading_weights);
-            cpg_arr[i].run();
+            cpg_arr[i].initNet(vec, &synaptic_spreading_weights, &cpg_arr, i);
+        }
+        
+        for (int k = 0; k < cpg_arr.size(); k++) {
+            cpg_arr[k].run();
         }
         
         double totalFitness = 0.0;
         double cur_best_fitness = 0.0;
         bool first = true;
         Chromosome* current_gen_best_chromosome = nullptr;
-        for (int j = 0; j < cpg_arr.size(); j++) {
-            double curFitness = cpg_arr[j].calcFitness();
+        for (int j = 0; j < cpg_arr.size() - 1; j++) {
+            double curFitness = cpg_arr[j].calcIntersegmentalFitness(cpg_arr[j+1]);
             if (first) {
                 cur_best_fitness = curFitness;
                 current_gen_best_chromosome = &c_arr[j];

@@ -6,15 +6,20 @@
 #include "Neuron.h"
 #include "RungeKutta.h"
 
-#define CAPTURE_SIZE 100
+
+#define CAPTURE_SIZE 400
 
 class CentralPatternGenerator {
 public:
     CentralPatternGenerator();
-    void initNet(std::vector<std::vector<double>>& chromosome, std::vector<std::pair<int, int>> * pair_vec);
+    void initNet(std::vector<std::vector<double>>& chromosome, std::vector<std::pair<int, int>> * pair_vec,
+                 std::array<CentralPatternGenerator, 11> * cpg_arr, int index);
     void run();
     double calcFitness();
-    double calcIntersegmentalFitness();
+    double calcIntersegmentalFitness(CentralPatternGenerator& nextCpg);
+    int findPeakIndex(int starting_index);
+    double findXOf(int index);
+    
 private:
     
     Neuron A_left;
@@ -30,6 +35,9 @@ private:
     Neuron BS_right;
     
     std::array<double, CAPTURE_SIZE> m_last_few_points;
+    
+    std::array<CentralPatternGenerator, 11> * m_cpg_arr;
+    int m_index;
     
     std::vector<Neuron> m_network;
     std::vector<Neuron> m_copy;
