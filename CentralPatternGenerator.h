@@ -12,7 +12,7 @@
 class CentralPatternGenerator {
 public:
     CentralPatternGenerator();
-    void initNet(std::vector<std::vector<double>>& chromosome, std::vector<std::pair<int, int>> * pair_vec,
+    void initNet(std::vector<std::vector<double>>& chromosome, std::vector<std::pair<int, int>>&  pair_vec,
                  std::array<CentralPatternGenerator, 11> * cpg_arr, int index);
     void run();
     double calcFitness();

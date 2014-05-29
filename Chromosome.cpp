@@ -91,7 +91,7 @@ void Chromosome::decode() {
             cout << val << " ";
         }
         cout << "*" <<  endl;
-    }
+     }
 }
 
 void Chromosome::getRandomBits() {

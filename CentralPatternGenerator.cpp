@@ -17,7 +17,7 @@ double CentralPatternGenerator::findXOf(int index) {
     return m_network[index].getX();
 }
 
-void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>> * pair_vec,
+void CentralPatternGenerator::initNet(vector<vector<double>>& vec, vector<pair<int, int>>&  pair_vec,
                                       array<CentralPatternGenerator, 11> * cpg_arr, int cpg_index) {
     
 

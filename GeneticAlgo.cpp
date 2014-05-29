@@ -39,7 +39,7 @@ void GeneticAlgo::run() {
             init_syn_weights(synaptic_spreading_weights, c_arr[i]);
 
             vector<vector<double>> vec = vector<vector<double>>();
-            cpg_arr[i].initNet(vec, &synaptic_spreading_weights, &cpg_arr, i);
+            cpg_arr[i].initNet(vec, synaptic_spreading_weights, &cpg_arr, i);
         }
         
         for (int k = 0; k < cpg_arr.size(); k++) {
@@ -73,7 +73,7 @@ void GeneticAlgo::run() {
         }
         cout << "************************************" << endl;
         cout << "best fitness of cur " << bestFitness << endl;
-        bestChromosome->decode();
+        //bestChromosome->decode();
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
         
         if (done) break;

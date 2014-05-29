@@ -6,7 +6,7 @@ using namespace std;
 
 RungeKutta::RungeKutta() {}
 
-RungeKutta::RungeKutta(vector<Neuron> * network, vector<pair<int, int>> * p, int cpg_index, std::array<CentralPatternGenerator, 11> * cpg_arr) {
+RungeKutta::RungeKutta(vector<Neuron> * network, vector<pair<int, int>> p, int cpg_index, std::array<CentralPatternGenerator, 11> * cpg_arr) {
     m_cur_network = network;
     m_syn_spread_weights = p;
     m_cpg_index = cpg_index;
@@ -27,7 +27,7 @@ int findIndex(int i) {
 double RungeKutta::findDivAmt(int i) {
     int index = findIndex(i);
     if (index == -1) return 1.0;
-    pair<int, int> weights = (*m_syn_spread_weights)[index];
+    pair<int, int> weights = m_syn_spread_weights[index];
     return weights.first + weights.second + 1;
 }
 
@@ -44,9 +44,10 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
     }
     
     int netIndex = n.getNetworkIndex();
-    if (netIndex != -1 && netIndex != 0) {
-        pair<int, int> bounds = (*m_syn_spread_weights)[findIndex(n.getNetworkIndex())];
+    if (netIndex != -1 && netIndex != 0 && netIndex != 5) {
+        pair<int, int> bounds = m_syn_spread_weights[findIndex(n.getNetworkIndex())];
         double neuron_div_amt = bounds.first + bounds.second + 1;
+        
         for (int j = m_cpg_index - bounds.second; j < m_cpg_index + bounds.first; j++) {
             if (j < 0 || j > 10) continue;
             sum +=  (*m_cpg_arr)[j].findXOf(n.getNetworkIndex()) / neuron_div_amt;
