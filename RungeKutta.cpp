@@ -43,7 +43,7 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
         sum += weights[i + WEIGHT_OFFSET] * (*m_cur_network)[i].getX() / synaptic_spread_divider;
     }
     
-    int netIndex = n.getNetworkIndex();
+    /*int netIndex = n.getNetworkIndex();
     if (netIndex != -1 && netIndex != 0 && netIndex != 5) {
         pair<int, int> bounds = m_syn_spread_weights[findIndex(n.getNetworkIndex())];
         double neuron_div_amt = bounds.first + bounds.second + 1;
@@ -51,6 +51,28 @@ double RungeKutta::addWeightedNeighbors(Neuron& n) {
         for (int j = m_cpg_index - bounds.second; j < m_cpg_index + bounds.first; j++) {
             if (j < 0 || j > 10) continue;
             sum +=  (*m_cpg_arr)[j].findXOf(n.getNetworkIndex()) / neuron_div_amt;
+        }
+    }*/
+    int netIndex = n.getNetworkIndex();
+    if (netIndex != -1 && netIndex != 0 && netIndex != 5) {
+        // j traverses cpgs
+        for (int j = 0; j < 11; j++) {
+            if (j == m_cpg_index) continue;
+            // k traverses neural net
+            vector<Neuron> * network = (*m_cpg_arr)[j].getNetwork();
+            for (int k = 0; k < 10; k++) {
+                if (k == 4 || k == 9) continue;
+                Neuron * n = &(*network)[k];
+                pair<int, int> bounds = m_syn_spread_weights[findIndex(n->getNetworkIndex())];
+                double neuron_div_amt = bounds.first + bounds.second + 1;
+                int distance = abs(m_cpg_index - j);
+                if (j < m_cpg_index) {
+                    if (distance > bounds.second) continue;
+                } else {
+                    if (distance > bounds.first) continue;
+                }
+                sum += (* m_cpg_arr)[j].findXOf(n->getNetworkIndex()) / neuron_div_amt;
+            }
         }
     }
     

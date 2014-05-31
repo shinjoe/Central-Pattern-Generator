@@ -33,6 +33,7 @@ public:
     static void crossover(std::array<double, CHROMOSOME_LEN>& child1, std::array<double, CHROMOSOME_LEN>& child2);
     static std::array<double, CHROMOSOME_LEN>& rouletteSelect(double totalFitness, Chromosome c_arr[], Chromosome* cur_best, int len);
     void decode();
+    void decode_interseg();
     void to_vector(std::vector<std::vector<double>>& vec);
     static void prune(std::array<double, CHROMOSOME_LEN>& child);
 

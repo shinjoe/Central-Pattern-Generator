@@ -31,6 +31,7 @@ void GeneticAlgo::run() {
     cout << "----------------------------------------" << endl;
     Chromosome* bestChromosome = nullptr;
     double bestFitness = 0.0;
+    bool veryfirstiter = true;
     while (!done) {
         
         double totalFitness = 0.0;
@@ -56,30 +57,41 @@ void GeneticAlgo::run() {
             double curFitness = 0.0;
             for (int j = 0; j < cpg_arr.size() - 1; j++) {
                 curFitness += cpg_arr[j].calcIntersegmentalFitness(cpg_arr[j+1]);
-                if (first) {
-                    cur_best_fitness = curFitness;
-                    current_gen_best_chromosome = &c_arr[j];
-                    first = false;
-                } else {
-                    if (curFitness > cur_best_fitness) {
-                        cur_best_fitness = curFitness;
-                        current_gen_best_chromosome = &c_arr[j];
-                    }
-                }
-                
-                if (curFitness > bestFitness) {
-                    bestFitness = curFitness;
-                    bestChromosome = &c_arr[j];
-                }
-                cout << "fit " << curFitness << endl;
             }
+            cout << "fit " << curFitness << endl;
             totalFitness += curFitness;
             c_arr[p].setFitness(curFitness);
-            cout << "************************************" << endl;
-            cout << "best fitness of cur " << bestFitness << endl;
-            //bestChromosome->decode();
-            cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+
+            if (veryfirstiter) {
+                bestChromosome = &c_arr[p];
+                bestFitness = curFitness;
+                veryfirstiter = false;
+            }
+            
+            if (first) {
+                cur_best_fitness = curFitness;
+                current_gen_best_chromosome = &c_arr[p];
+                first = false;
+            } else {
+                if (curFitness > cur_best_fitness) {
+                    cur_best_fitness = curFitness;
+                    current_gen_best_chromosome = &c_arr[p];
+                }
+            }
+            
+            if (curFitness > bestFitness) {
+                bestFitness = curFitness;
+                bestChromosome = &c_arr[p];
+            }
+            
         }
+        
+        cout << "************************************" << endl;
+        cout << "best fitness of cur " << bestFitness << endl;
+        if (bestChromosome != nullptr)
+            bestChromosome->decode_interseg();
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+        
         if (done) break;
         
         array<Chromosome, POP_SIZE> nextGen;
@@ -93,8 +105,8 @@ void GeneticAlgo::run() {
             Chromosome::crossover(child1, child2);
             Chromosome::mutate(child1);
             Chromosome::mutate(child2);
-            Chromosome::prune(child1);
-            Chromosome::prune(child2);
+           // Chromosome::prune(child1);
+           // Chromosome::prune(child2);
             
             nextGen[newGenCount++] = Chromosome(child1);
             nextGen[newGenCount++] = Chromosome(child2);

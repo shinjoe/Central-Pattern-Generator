@@ -43,6 +43,10 @@ double synaptic_weight_conversion(double x) {
     return 10 * x;
 }
 
+int syn_spread_conversion(double x) {
+    return (int) round(SPREAD_MAX * x);
+}
+
 
 void Chromosome::to_vector(std::vector<std::vector<double>>& vec) {
     // left side of network
@@ -81,6 +85,13 @@ void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
     m_ga = ga;
 }
 
+void Chromosome::decode_interseg() {
+    for (int i = 0; i < CHROMOSOME_LEN; i++) {
+        cout << syn_spread_conversion(m_genes[i]) << " ";
+    }
+    cout << endl;
+}
+
 void Chromosome::decode() {
     for (int i = 0; i < NEURONS_TO_SET_UP; i++) {
         for (int j = 0; j < PARAM_LEN; j++) {
@@ -108,9 +119,6 @@ void Chromosome::printBits() {
     cout << endl;
 }
 
-int syn_spread_conversion(double x) {
-    return (int) round(SPREAD_MAX * x);
-}
 
 std::pair<int, int> Chromosome::getSynWeightPair(int index) {
     pair<int, int> res(0, 0);

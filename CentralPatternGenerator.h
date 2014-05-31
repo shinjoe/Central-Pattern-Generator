@@ -18,7 +18,9 @@ public:
     double calcFitness();
     double calcIntersegmentalFitness(CentralPatternGenerator& nextCpg);
     int findPeakIndex(int starting_index);
+    int findTroughIndex(int starting_index);
     double findXOf(int index);
+    std::vector<Neuron> * getNetwork();
     
 private:
     
