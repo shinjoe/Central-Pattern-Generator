@@ -9,6 +9,8 @@
 
 #define CAPTURE_SIZE 400
 
+class Chromosome;
+
 class CentralPatternGenerator {
 public:
     CentralPatternGenerator();
@@ -21,6 +23,8 @@ public:
     int findTroughIndex(int starting_index);
     double findXOf(int index);
     std::vector<Neuron> * getNetwork();
+    Chromosome * get_cur_chromosome();
+    void set_cur_chromosome(Chromosome* c);
     
 private:
     
@@ -48,6 +52,7 @@ private:
     
     bool m_using_network_one;
     
+    Chromosome * m_cur_chromosome;
     
     RungeKutta m_solver;
     

@@ -85,11 +85,12 @@ void Chromosome::setGeneticAlgo(GeneticAlgo* ga) {
     m_ga = ga;
 }
 
-void Chromosome::decode_interseg() {
+string Chromosome::decode_interseg() {
+    string res = "";
     for (int i = 0; i < CHROMOSOME_LEN; i++) {
-        cout << syn_spread_conversion(m_genes[i]) << " ";
+        res += to_string(syn_spread_conversion(m_genes[i])) + " ";
     }
-    cout << endl;
+    return res;
 }
 
 void Chromosome::decode() {

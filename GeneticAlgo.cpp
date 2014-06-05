@@ -45,6 +45,7 @@ void GeneticAlgo::run() {
 
                 vector<vector<double>> vec = vector<vector<double>>();
                 cpg_arr[i].initNet(vec, synaptic_spreading_weights, &cpg_arr, i);
+                cpg_arr[i].set_cur_chromosome(&c_arr[p]);
             }
         
             for (int k = 0; k < cpg_arr.size(); k++) {

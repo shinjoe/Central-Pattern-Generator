@@ -13,6 +13,15 @@ using namespace std;
 
 CentralPatternGenerator::CentralPatternGenerator() {
     m_last_few_points = array<double, CAPTURE_SIZE>();
+    m_cur_chromosome = nullptr;
+}
+
+void CentralPatternGenerator::set_cur_chromosome(Chromosome * c) {
+    m_cur_chromosome = c;
+}
+
+Chromosome * CentralPatternGenerator::get_cur_chromosome() {
+    return m_cur_chromosome;
 }
 
 double CentralPatternGenerator::findXOf(int index) {
@@ -144,8 +153,12 @@ double CentralPatternGenerator::calcFitness() {
 void CentralPatternGenerator::run() {
     ofstream outfile0;
     ofstream outfile1;
-    if (m_cpg_index == 0)
+    ofstream title;
+    if (m_cpg_index == 0) {
         outfile0.open("out0.txt");
+        title.open("genes.txt");
+        title << get_cur_chromosome()->decode_interseg() << endl;
+    }
     if (m_cpg_index == 1)
         outfile1.open("out1.txt");
     double time = 0.0;
@@ -168,6 +181,11 @@ void CentralPatternGenerator::run() {
         time += TIMESTEP;
         m_using_network_one = !m_using_network_one;
     }
-    outfile0.close();
-    outfile1.close();
+    if (m_cpg_index == 0) {
+        outfile0.close();
+        title.close();
+    }
+
+    if (m_cpg_index == 1)
+        outfile1.close();
 }
